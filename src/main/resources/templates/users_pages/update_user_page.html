@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Update user page</title>
+    </head>
+
+    <body>
+        <h1>Edit user:</h1>
+
+        <!-- Форма для редактирования пользователя -->
+        <form th:action="@{/users/edit}" th:object="${edited_user}" method="POST" accept-charset="UTF-8">
+
+            <!-- Скрытое поле для ID, чтобы отправлять его на сервер -->
+            <input type="hidden" th:field="*{id}" />
+
+            <!-- Поле для отображения ID пользователя (только для чтения) -->
+            <label for="user_id_label">Id:</label>
+            <input type="text" id="user_id_label" th:field="*{id}" size="70" maxlength="150" readonly required />
+            <br/> <br/>
+
+            <!-- Поле для имени пользователя -->
+            <label for="user_name_label">User Name:</label>
+            <input type="text" id="user_name_label" th:field="*{userName}" size="70" maxlength="150" required />
+            <br/><br/>
+
+            <!-- Поле для пароля пользователя -->
+            <label for="user_password_label">User Password:</label>
+            <input type="text" id="user_password_label" th:field="*{password}" size="70" maxlength="150" required />
+            <br/><br/>
+
+            <!-- Поле для Email пользователя -->
+            <label for="user_email_label">Email:</label>
+            <input type="email" id="user_email_label" th:field="*{email}" size="70" maxlength="150" required />
+            <br/><br/>
+
+            <!-- Поле для полного имени пользователя -->
+            <label for="user_full_name_label">Full Name:</label>
+            <input type="text" id="user_full_name_label" th:field="*{fullName}" size="70" maxlength="150" required />
+            <br/><br/>
+
+            <!-- Поле для даты рождения пользователя -->
+            <label for="user_date_birth_label">Date of Birth:</label>
+            <input type="date" id="user_date_birth_label" th:field="*{dateBirth}" required />
+            <br/><br/>
+
+            <!-- Поле для адреса пользователя -->
+            <label for="user_address_label">Address:</label>
+            <input type="text" id="user_address_label" th:field="*{address}" size="70" maxlength="150" required />
+            <br/><br/><br/>
+
+            <!-- Кнопка сохранения изменений -->
+            <input type="submit" value="-= Save Changes =-">
+        </form>
+        <br/>
+
+        <!-- Кнопка удаления пользователя (через GET-запрос для подтверждения удаления) -->
+        <form method="GET" th:action="@{/users/delete}">
+            <input type="hidden" name="id_removed_user" th:value="${edited_user.id}" />
+            <input type="submit" value="-= Delete =-" />
+        </form>
+        <br/>
+
+        <!-- Кнопка отмены редактирования -->
+        <form th:method="GET" th:action="@{/users/all}" accept-charset="UTF-8">
+            <input type="submit" value="-= Cancel =-" />
+        </form>
+        <br/> <br/> <hr/> <br/> <br/>
+
+    </body>
+</html>
+
+<!-- Поля th:field автоматически привязываются к данным модели, поэтому th:value для этих полей не требуется!!! -->
