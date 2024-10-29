@@ -1,19 +1,25 @@
 package ru.itmentor.spring.boot_security.demo.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.itmentor.spring.boot_security.demo.model.User;
 
 import java.util.List;
 
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
-    void save(User user);
+    // Создать нового пользователя
+    User createUser(User user);
 
-    User getById(int id);
+    // Найти пользователя по ID
+    User findUserById(int id);
 
-    List<User> getAll();
+    // Найти всех пользователей
+    List<User> findAllUsers();
 
-    void update(User user);
+    // Обновить информацию о пользователе
+    void updateUser(User user);
 
-    void delete(int id);
+    // Удалить пользователя по ID
+    void deleteUserById(int id);
 }

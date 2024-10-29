@@ -2,57 +2,70 @@ package ru.itmentor.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itmentor.spring.boot_security.demo.dao.UserDao;
 import ru.itmentor.spring.boot_security.demo.model.User;
+import ru.itmentor.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-@org.springframework.stereotype.Service
+@Service
 public class UserServiceImpl implements UserService {
 
-    private UserDao dao;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
 
     @Autowired
-    public UserServiceImpl(@Qualifier("daoImpDB") UserDao dao) { // daoImplList   or   daoImpDB
-        this.dao = dao;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
 
     @Override
-    @Transactional // Теперь транзакции контролируются на уровне сервиса
-    public void save(User user) {
-        dao.save(user);
+    public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
-
     @Override
-    @Transactional(readOnly = true) // Транзакция для операций чтения // не изменяют данные
-    public User getById(int id) {
-        return dao.getById(id);
+    public User findUserById(int id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
     }
 
-
     @Override
-    @Transactional(readOnly = true) // Транзакция для операций чтения // не изменяют данные
-    public List<User> getAll() {
-        return dao.getAll()  ;
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
-
     @Override
-    @Transactional // Обновление также проходит в рамках транзакции
-    public void update(User user) {
-        dao.update(user);
+    public void updateUser(User user) {
+        userRepository.save(user);
     }
 
+    @Override
+    public void deleteUserById(int id) {
+        userRepository.deleteById(id);
+    }
 
     @Override
-    @Transactional // Удаление в транзакции
-    public void delete(int id) {
-        dao.delete(id);
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userName));
+        return new org.springframework.security.core.userdetails.User(
+                user.getUserName(),
+                user.getPassword(),
+                user.getRoles()
+        );
     }
 }
