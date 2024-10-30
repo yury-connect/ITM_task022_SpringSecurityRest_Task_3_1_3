@@ -6,16 +6,14 @@ import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
-import ru.itmentor.spring.boot_security.demo.util.UserGenerator;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @org.springframework.stereotype.Controller
 @RequestMapping(value = "/users")
-public class UserController {
+public class AdminController {
 
     private UserService userService;
     private UserUtilService userUtilService;
@@ -23,7 +21,7 @@ public class UserController {
 
 
     @Autowired
-    public UserController(UserService service) {
+    public AdminController(UserService service) {
         this.userService = service;
     }
 

@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  */
 public final class UserGenerator {
 
-    private static final String USER_PASSWORD_DEFAULT = "1";
+    private static final String USER_PASSWORD_DEFAULT = "1234";
     private static final Random RANDOM = new Random();
 
 

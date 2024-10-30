@@ -43,30 +43,30 @@ INSERT INTO roles (role_name) VALUES ('GUEST'), ('USER'), ('ADMIN'), ('SUPERSAMI
 -- Пользователи с ролью GUEST
 INSERT INTO users (user_name, user_password, user_email, user_full_name, user_date_birth, user_address)
 VALUES
-    ('guest1', 'password1', 'guest1@example.com', 'Guest One', '1990-01-01', '123 Street, City'),
-    ('guest2', 'password2', 'guest2@example.com', 'Guest Two', '1992-02-02', '456 Street, City'),
-    ('guest3', 'password3', 'guest3@example.com', 'Guest Three', '1993-03-03', '789 Street, City');
+    ('guest1', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'guest1@example.com', 'Guest One', '1990-01-01', '123 Street, City'),   -- пароль: '1234'
+    ('guest2', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'guest2@example.com', 'Guest Two', '1992-02-02', '456 Street, City'),   -- пароль: '1234'
+    ('guest3', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'guest3@example.com', 'Guest Three', '1993-03-03', '789 Street, City');   -- пароль: '1234'
 
 -- Пользователи с ролью USER
 INSERT INTO users (user_name, user_password, user_email, user_full_name, user_date_birth, user_address)
 VALUES
-    ('user1', 'password4', 'user1@example.com', 'User One', '1994-04-04', '1234 Avenue, City'),
-    ('user2', 'password5', 'user2@example.com', 'User Two', '1995-05-05', '5678 Avenue, City'),
-    ('user3', 'password6', 'user3@example.com', 'User Three', '1996-06-06', '91011 Avenue, City');
+    ('user1', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'user1@example.com', 'User One', '1994-04-04', '1234 Avenue, City'),   -- пароль: '1234'
+    ('user2', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'user2@example.com', 'User Two', '1995-05-05', '5678 Avenue, City'),   -- пароль: '1234'
+    ('user3', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'user3@example.com', 'User Three', '1996-06-06', '91011 Avenue, City');   -- пароль: '1234'
 
 -- Пользователи с ролью ADMIN
 INSERT INTO users (user_name, user_password, user_email, user_full_name, user_date_birth, user_address)
 VALUES
-    ('admin1', 'password7', 'admin1@example.com', 'Admin One', '1980-07-07', 'Admin Street, City'),
-    ('admin2', 'password8', 'admin2@example.com', 'Admin Two', '1981-08-08', 'Admin Avenue, City'),
-    ('admin3', 'password9', 'admin3@example.com', 'Admin Three', '1982-09-09', 'Admin Boulevard, City');
+    ('admin1', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'admin1@example.com', 'Admin One', '1980-07-07', 'Admin Street, City'),   -- пароль: '1234'
+    ('admin2', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'admin2@example.com', 'Admin Two', '1981-08-08', 'Admin Avenue, City'),   -- пароль: '1234'
+    ('admin3', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'admin3@example.com', 'Admin Three', '1982-09-09', 'Admin Boulevard, City');   -- пароль: '1234'
 
 -- Пользователи с ролью SUPERSAMIN
 INSERT INTO users (user_name, user_password, user_email, user_full_name, user_date_birth, user_address)
 VALUES
-    ('superadmin1', 'password10', 'superadmin1@example.com', 'Super Admin One', '1970-10-10', 'Super Street, City'),
-    ('superadmin2', 'password11', 'superadmin2@example.com', 'Super Admin Two', '1971-11-11', 'Super Avenue, City'),
-    ('superadmin3', 'password12', 'superadmin3@example.com', 'Super Admin Three', '1972-12-12', 'Super Boulevard, City');
+    ('superadmin1', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'superadmin1@example.com', 'Super Admin One', '1970-10-10', 'Super Street, City'),   -- пароль: '1234'
+    ('superadmin2', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'superadmin2@example.com', 'Super Admin Two', '1971-11-11', 'Super Avenue, City'),   -- пароль: '1234'
+    ('superadmin3', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'superadmin3@example.com', 'Super Admin Three', '1972-12-12', 'Super Boulevard, City');   -- пароль: '1234'
 
 
 
