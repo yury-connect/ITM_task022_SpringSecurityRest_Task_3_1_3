@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "roles")
+//@Table(name = "roles", catalog = "your_database", schema = "", indexes = {@Index(name = "idx_roles_role_name", columnList = "role_name")}) // можно явно указать создание таблиц с типом InnoDB
 public class Role {
 
     @Id

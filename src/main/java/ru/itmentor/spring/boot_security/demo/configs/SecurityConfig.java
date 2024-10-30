@@ -53,6 +53,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+
     // Настройка AuthenticationManager, используя UserService
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {

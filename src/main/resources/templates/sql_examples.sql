@@ -21,6 +21,7 @@ SELECT * FROM users;
 
 DROP TABLE IF EXISTS users;
 DROP DATABASE IF EXISTS itm_task021_spring_security_task_3_1_2_db;    -- Удаляю базу если она существует;
+GRANT ALL PRIVILEGES ON DATABASE itm_task021_spring_security_task_3_1_2_db TO user;  -- Даём пользователю права на базу данных
 
 
 
