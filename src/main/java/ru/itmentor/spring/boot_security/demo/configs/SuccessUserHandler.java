@@ -27,8 +27,13 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
 //        }
 
         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+
+        System.out.println("\n\n\tRoles: " + roles.size());
+        roles.stream().forEach(System.out::println); // debug stream
+        System.out.println("\n\n");
+
         if (roles.contains("ROLE_SUPERADMIN") || roles.contains("ROLE_ADMIN")) {
-            response.sendRedirect("/authenticated/admin");
+            response.sendRedirect("/authenticated/admin/all");
         } else if (roles.contains("ROLE_USER")) {
             response.sendRedirect("/authenticated/user");
         } else if (roles.contains("ROLE_GUEST")) {

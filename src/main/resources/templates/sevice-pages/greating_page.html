@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>Greeting page</title>
         <style>
             /* Стили для огромной кнопки */
             .big-button {
@@ -23,20 +22,26 @@
     </head>
 
     <body>
+        <h1>Greeting page</h1>
+        <br/>
+
         <div>
             <!-- Вывод заголовка H1 -->
             <h1 th:text="${h1_message}">Text: Task number and theme</h1>
 
             <!-- Вывод заголовка H2 -->
             <h2 th:text="${h2_message}">Text: message</h2>
-            <br/> <br/> <hr/> <br/>
+            <br/> <hr/> <br/>
 
             <div style="width: 100%; text-align: center;">
-                <form th:method="GET" th:action="@{/authenticated/admin}">
+<!--                <form th:method="GET" th:action="@{/authenticated/admin}">-->
+<!--                    <input type="submit" value="-= GO =-" class="big-button"/>-->
+<!--                </form>-->
+                <form method="GET" action="/login">
                     <input type="submit" value="-= GO =-" class="big-button"/>
                 </form>
             </div>
-            <br/> <br/> <hr/> <br/>
+            <br/> <br/> <hr/> <br/> <br/>
 
             <!-- Вывод заголовка H5 -->
             <h5 th:text="${h5_message}">Text: Author</h5>

@@ -31,8 +31,8 @@ public class AdminController {
 
     // Перенаправление на список всех пользователей (GET)
     @GetMapping()
-    public String root(Model model) { // В этом случае - перенаправлю на страничку по умолчанию
-        System.out.println("\n\troot\n");
+    public String root() { // В этом случае - перенаправлю на страничку по умолчанию
+        System.out.println("\n\tAdminController:root\n");
         return "redirect:/authenticated/admin/all";
     }
 
