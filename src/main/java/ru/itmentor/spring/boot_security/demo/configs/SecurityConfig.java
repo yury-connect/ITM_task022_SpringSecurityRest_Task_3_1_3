@@ -25,10 +25,10 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SecurityConfig(AuthenticationSuccessHandler successUserHandler, PasswordEncoder passwordEncoder, UserService userService) {
+    public SecurityConfig(AuthenticationSuccessHandler successUserHandler, UserService userService, PasswordEncoder passwordEncoder) {
         this.successUserHandler = successUserHandler;
-        this.passwordEncoder = passwordEncoder;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -36,16 +36,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
+            .authorizeRequests()
                 .antMatchers("/", "/index", "/login", "/css/**", "/js/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
-                .and()
+            .and()
                 .formLogin()
                 .loginPage("/login")
                 .successHandler(successUserHandler)
                 .permitAll()
-                .and()
+            .and()
                 .logout()
                 .logoutSuccessUrl("/")
                 .permitAll();
@@ -55,10 +55,10 @@ public class SecurityConfig {
 
 
     // Настройка AuthenticationManager, используя UserService
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
-        return auth.build();
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+//        AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
+//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
+//        return auth.build();
+//    }
 }
