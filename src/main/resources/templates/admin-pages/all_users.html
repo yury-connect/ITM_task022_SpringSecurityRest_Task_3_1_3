@@ -70,7 +70,17 @@
     <form th:method="POST" th:action="@{/authenticated/admin/delete_all}">
         <input type="submit" value="-= Delete all user =-"/>
     </form>
+    <br/> <br/> <hr/> <br/> <br/>
+
+    <form th:method="GET" th:action="@{/authenticated/admin/current_user}" accept-charset="UTF-8">
+        <input type="submit" value="-= Current user info =-" />
+    </form>
     <br/> <br/>
 
+    <!-- Кнопка разлогинивания -->
+    <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
+        <input type="submit" value="-= LogOut =-" />
+    </form>
+    <br/> <br/> <hr/> <br/> <br/>
     </body>
 </html>

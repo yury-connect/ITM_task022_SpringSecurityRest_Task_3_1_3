@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itmentor.spring.boot_security.demo.constants.Constants;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.RoleService;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
@@ -13,12 +12,14 @@ import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD_PLACE_HOLDER;
+import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
+
 
 @Controller
 @RequestMapping(value = "/authenticated/admin")
-public class AdminController {
+public class AdminController extends AbstractController {
 
-    private UserService userService;
     private UserUtilService userUtilService;
     private RoleService roleService;
 
@@ -26,7 +27,7 @@ public class AdminController {
 
     @Autowired
     public AdminController(UserService service, UserUtilService userUtilService, RoleService roleService) {
-        this.userService = service;
+        super(service); //  прокидываю UserService в общий суперкласс
         this.userUtilService = userUtilService;
         this.roleService = roleService;
     }
@@ -51,7 +52,11 @@ public class AdminController {
     @GetMapping("/create")
     public String showCreateUsersPage(Model model) {
         User defaultUser = userUtilService.generateNewUsers(-1).get(0);
+        defaultUser.setPassword(USER_PASSWORD_DEFAULT);
         model.addAttribute("created_user", defaultUser);
+
+        model.addAttribute("all_existing_roles", roleService.findAllRoles());
+
         return "admin-pages/create_user_page";
     }
 
@@ -77,7 +82,7 @@ public class AdminController {
     @GetMapping("/view")
     public String showUserPage(@RequestParam("id_viewed_user") Integer id, Model model) {
         User viewedUser = userService.findUserById(id);
-        viewedUser.setPassword(Constants.PASSWORD_PLACE_HOLDER);
+        viewedUser.setPassword(PASSWORD_PLACE_HOLDER);
         model.addAttribute("viewed_user", viewedUser);
         return "admin-pages/view_user_page";
     }
@@ -88,7 +93,7 @@ public class AdminController {
     @GetMapping("/edit")
     public String showEditUsersPage(@RequestParam("id_edited_user") Integer id, Model model) {
         User editedUser = userService.findUserById(id);
-        editedUser.setPassword(Constants.PASSWORD_PLACE_HOLDER);
+        editedUser.setPassword(PASSWORD_PLACE_HOLDER);
         model.addAttribute("edited_user", editedUser);
         model.addAttribute("all_existing_roles", roleService.findAllRoles());
         return "admin-pages/update_user_page";
@@ -124,5 +129,19 @@ public class AdminController {
         List<User> deleteUsersList = new ArrayList<>(userService.findAllUsers());
         deleteUsersList.forEach(usr -> userService.deleteUserById(usr.getId()));
         return "redirect:/authenticated/admin/all";
+    }
+
+
+
+    // Просмотр информации о залогиненном пользователе (GET)
+    @GetMapping("/current_user")
+    public String showCurrentUserPage(Model model) {
+        User currentUser = getCurrentUser(); // получаю (GET) залогиненного пользователя из общего суперкласса
+        currentUser.setPassword(PASSWORD_PLACE_HOLDER);
+
+        System.out.println("\n\n\tshowCurrentUserPage: currentUser = " + currentUser + "\n\n");
+
+        model.addAttribute("viewed_user", currentUser);
+        return "users_pages/user_info_page";
     }
 }

@@ -49,29 +49,41 @@
             <input type="text" id="user_address_label" th:field="*{address}" size="70" maxlength="150" required />
             <br/><br/><br/>
 
-            <!-- Чек-боксы для ролей пользователя -->
-            <table border="0">
-                <tr th:each="existing_role : ${all_existing_roles}">
-                    <td th:text="${existing_role}">Role</td>
-                </tr>
-            </table>
+            <!-- Чекбоксы для выбора ролей пользователя -->
+            <div>
+                <label>Roles:</label>
+                <br/>
+                <div th:each="existing_role : ${all_existing_roles}">
+                    <input type="checkbox"
+                           th:field="*{roles}"
+                           th:value="${existing_role.id}"
+                           th:checked="${edited_user.roles.contains(existing_role)}" />
+                    <span th:text="${existing_role.name}">Role Name</span>
+                </div>
+            </div>
             <br/><br/><br/>
 
             <!-- Кнопка сохранения изменений -->
             <input type="submit" value="-= Save Changes =-">
         </form>
-        <br/>
+        <br/> <br/>
 
         <!-- Кнопка удаления пользователя (через GET-запрос для подтверждения удаления) -->
         <form method="GET" th:action="@{/authenticated/admin/delete}">
             <input type="hidden" name="id_removed_user" th:value="${edited_user.id}" />
             <input type="submit" value="-= Delete =-" />
         </form>
-        <br/>
+        <br/> <br/>
 
         <!-- Кнопка отмены редактирования -->
         <form th:method="GET" th:action="@{/authenticated/admin/all}" accept-charset="UTF-8">
             <input type="submit" value="-= Cancel =-" />
+        </form>
+        <br/> <br/> <hr/> <br/> <br/>
+
+        <!-- Кнопка разлогинивания -->
+        <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
+            <input type="submit" value="-= LogOut =-" />
         </form>
         <br/> <br/> <hr/> <br/> <br/>
 

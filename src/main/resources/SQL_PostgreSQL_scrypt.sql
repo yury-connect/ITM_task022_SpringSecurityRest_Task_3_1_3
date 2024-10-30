@@ -42,7 +42,7 @@ CREATE TABLE user_roles (
 
 
 -- 4. Заполнение таблицы roles
-INSERT INTO roles (role_name) VALUES ('ROLE_GUEST'), ('ROLE_USER'), ('ROLE_ADMIN'), ('ROLE_SUPERSAMIN');
+INSERT INTO roles (role_name) VALUES ('ROLE_GUEST'), ('ROLE_USER'), ('ROLE_ADMIN'), ('ROLE_SUPERADMIN');
 
 
 
@@ -72,7 +72,7 @@ VALUES
     ('admin2', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'admin2@example.com', 'Admin Two', '1982-09-09', 'Admin Boulevard, City'),   -- пароль: '1234'
     ('admin3', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'admin3@example.com', 'Admin Three', '1983-10-10', 'Admin Road, City');   -- пароль: '1234'
 
--- Пользователи с ролью ROLE_SUPERSAMIN
+-- Пользователи с ролью ROLE_SUPERADMIN
 INSERT INTO users (user_name, user_password, user_email, user_full_name, user_date_birth, user_address)
 VALUES
     ('superadmin', '$2a$05$ppC7GcE5CtLHvX2gUHMFpeK7wpKf7Kdzfxp55b/.bEBZxDT9H7oe.', 'superadmin@example.com', 'Super Admin User', '1970-10-10', 'Super Street, City'),   -- пароль: '1234'
@@ -109,17 +109,17 @@ INSERT INTO user_roles (user_id, role_id) VALUES
                                               ((SELECT user_id FROM users WHERE user_name = 'admin3'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_USER')),
                                               ((SELECT user_id FROM users WHERE user_name = 'admin3'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_ADMIN'));
 
--- Пользователи с ролью ROLE_SUPERSAMIN (имеют роли ROLE_USER, ROLE_ADMIN и ROLE_SUPERSAMIN)
+-- Пользователи с ролью ROLE_SUPERADMIN (имеют роли ROLE_USER, ROLE_ADMIN и ROLE_SUPERADMIN)
 INSERT INTO user_roles (user_id, role_id) VALUES
                                               ((SELECT user_id FROM users WHERE user_name = 'superadmin'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_USER')),
                                               ((SELECT user_id FROM users WHERE user_name = 'superadmin'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_ADMIN')),
-                                              ((SELECT user_id FROM users WHERE user_name = 'superadmin'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_SUPERSAMIN')),
+                                              ((SELECT user_id FROM users WHERE user_name = 'superadmin'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_SUPERADMIN')),
                                               ((SELECT user_id FROM users WHERE user_name = 'superadmin1'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_USER')),
                                               ((SELECT user_id FROM users WHERE user_name = 'superadmin1'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_ADMIN')),
-                                              ((SELECT user_id FROM users WHERE user_name = 'superadmin1'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_SUPERSAMIN')),
+                                              ((SELECT user_id FROM users WHERE user_name = 'superadmin1'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_SUPERADMIN')),
                                               ((SELECT user_id FROM users WHERE user_name = 'superadmin2'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_USER')),
                                               ((SELECT user_id FROM users WHERE user_name = 'superadmin2'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_ADMIN')),
-                                              ((SELECT user_id FROM users WHERE user_name = 'superadmin2'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_SUPERSAMIN')),
+                                              ((SELECT user_id FROM users WHERE user_name = 'superadmin2'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_SUPERADMIN')),
                                               ((SELECT user_id FROM users WHERE user_name = 'superadmin3'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_USER')),
                                               ((SELECT user_id FROM users WHERE user_name = 'superadmin3'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_ADMIN')),
-                                              ((SELECT user_id FROM users WHERE user_name = 'superadmin3'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_SUPERSAMIN'));
+                                              ((SELECT user_id FROM users WHERE user_name = 'superadmin3'), (SELECT role_id FROM roles WHERE role_name = 'ROLE_SUPERADMIN'));

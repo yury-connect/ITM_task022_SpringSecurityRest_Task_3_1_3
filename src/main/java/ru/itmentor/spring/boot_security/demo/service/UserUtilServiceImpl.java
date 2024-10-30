@@ -12,6 +12,7 @@ import ru.itmentor.spring.boot_security.demo.util.UserGenerator;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -44,18 +45,26 @@ public class UserUtilServiceImpl implements UserUtilService{
     public List<User> generateNewUsers(int count) {
         List<Role> allExistingRoles = roleRepository.findAll();
 
+//        System.out.println("\n\n\tallExistingRoles = " + allExistingRoles.size());
+//        allExistingRoles.stream().forEach(System.out::println);
+//        System.out.println();
+
         List<User> userList;
+        Set<Role> rolesDefault = allExistingRoles.stream()
+                .filter(role -> "ROLE_GUEST".equals(role.getName()))
+                .collect(Collectors.toSet());
+
         if (count < 1) {
             userList = new ArrayList<>();
             userList.add(User.builder()
                     .id(-1) // при создании ставим заведомо несуществующий id
                     .userName("userLogin")
                     .password(passwordEncoder.encode(DEFAULT_PASSWORD))
-                    .email("userEmail")
+                    .email("userEmail@example.com")
                     .fullName("userFullName")
                     .dateBirth(new Date(System.currentTimeMillis()))
                     .address("userAddress")
-                    .roles(allExistingRoles.stream().collect(Collectors.toSet()))
+                    .roles(rolesDefault)
                     .build()
             );
         } else {

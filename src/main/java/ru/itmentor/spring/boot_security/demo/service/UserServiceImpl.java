@@ -46,6 +46,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findUserByUsername(String userName) {
+        return userRepository.findByUserName(userName).get();
+    }
+
+    @Override
     public List<User> findAllUsers() {
         List<User> allExistingUsers = userRepository.findAll();
         allExistingUsers.sort(Comparator.comparing(User::getId)); // сортируем отдаваемый список по возрастанию id

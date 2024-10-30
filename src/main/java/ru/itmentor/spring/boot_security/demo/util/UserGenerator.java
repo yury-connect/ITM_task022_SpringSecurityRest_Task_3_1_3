@@ -13,6 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
+
 
 /**
  * @author Yury
@@ -20,7 +22,6 @@ import java.util.stream.Stream;
  */
 public final class UserGenerator {
 
-    private static final String USER_PASSWORD_DEFAULT = "1234";
     private static final Random RANDOM = new Random();
 
 

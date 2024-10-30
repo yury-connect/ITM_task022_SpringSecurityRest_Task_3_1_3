@@ -14,6 +14,9 @@ public interface UserService extends UserDetailsService {
     // Найти пользователя по ID
     User findUserById(int id);
 
+    // Найти пользователя по userName
+    User findUserByUsername(String userName);
+
     // Найти всех пользователей
     List<User> findAllUsers();
 
