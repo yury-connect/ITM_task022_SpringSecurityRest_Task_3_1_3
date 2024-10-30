@@ -59,14 +59,14 @@
         <table border="0">
             <tr>
                 <td style = "width: 200px; text-align: center;">
-                    <form method="POST" th:action="@{/users/delete}">
+                    <form method="POST" th:action="@{/authenticated/admin/delete}">
                         <input type="hidden" name="id_removed_user" th:value="${removed_user.getId()}" />
                         <input type="hidden" name="_method" value="DELETE"/>
                         <input type="submit" value="-= Confirm DELETION =-"/>
                     </form>
                 </td>
                 <td style = "width: 200px; text-align: center;">
-                    <form th:method="GET" th:action="@{/users/all}" accept-charset="UTF-8">
+                    <form th:method="GET" th:action="@{/authenticated/admin/all}" accept-charset="UTF-8">
                         <input type="submit" value="-= Cancel =-"/>
                     </form>
                 </td>

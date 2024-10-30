@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.itmentor.spring.boot_security.demo.constants.Constants;
 import ru.itmentor.spring.boot_security.demo.model.User;
+import ru.itmentor.spring.boot_security.demo.service.RoleService;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
 
@@ -18,13 +20,15 @@ public class AdminController {
 
     private UserService userService;
     private UserUtilService userUtilService;
+    private RoleService roleService;
 
 
 
     @Autowired
-    public AdminController(UserService service, UserUtilService userUtilService) {
+    public AdminController(UserService service, UserUtilService userUtilService, RoleService roleService) {
         this.userService = service;
         this.userUtilService = userUtilService;
+        this.roleService = roleService;
     }
 
 
@@ -72,7 +76,9 @@ public class AdminController {
     // Просмотр информации о конкретном пользователе (GET)
     @GetMapping("/view")
     public String showUserPage(@RequestParam("id_viewed_user") Integer id, Model model) {
-        model.addAttribute("viewed_user", userService.findUserById(id));
+        User viewedUser = userService.findUserById(id);
+        viewedUser.setPassword(Constants.PASSWORD_PLACE_HOLDER);
+        model.addAttribute("viewed_user", viewedUser);
         return "admin-pages/view_user_page";
     }
 
@@ -81,7 +87,10 @@ public class AdminController {
     // Отображение страницы редактирования пользователя (GET)
     @GetMapping("/edit")
     public String showEditUsersPage(@RequestParam("id_edited_user") Integer id, Model model) {
-        model.addAttribute("edited_user", userService.findUserById(id));
+        User editedUser = userService.findUserById(id);
+        editedUser.setPassword(Constants.PASSWORD_PLACE_HOLDER);
+        model.addAttribute("edited_user", editedUser);
+        model.addAttribute("all_existing_roles", roleService.findAllRoles());
         return "admin-pages/update_user_page";
     }
 

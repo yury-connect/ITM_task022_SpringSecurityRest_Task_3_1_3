@@ -7,9 +7,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itmentor.spring.boot_security.demo.constants.Constants;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.repository.UserRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,12 +47,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllUsers() {
-        return userRepository.findAll();
+        List<User> allExistingUsers = userRepository.findAll();
+        allExistingUsers.sort(Comparator.comparing(User::getId)); // сортируем отдаваемый список по возрастанию id
+        return allExistingUsers;
     }
 
     @Override
     @Transactional
     public void updateUser(User user) {
+        if (Constants.PASSWORD_PLACE_HOLDER.equals(user.getPassword())) {
+            // Если пароль не поменяется, когда обновленный пользователь прилетел из формы - то восстанавливаем прежний пароль;
+            final String previousPassword = userRepository.findById(user.getId()).get().getPassword();
+            user.setPassword(previousPassword);  // Восстанавливаем прежний пароль при сохранении в БД.;
+        } else {
+            // Если пароль поменяется (т.е. введен новый), то кодируем новый пароль;
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userRepository.save(user);
     }
 

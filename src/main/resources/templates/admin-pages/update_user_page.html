@@ -9,7 +9,7 @@
         <h1>Edit user:</h1>
 
         <!-- Форма для редактирования пользователя -->
-        <form th:action="@{/users/edit}" th:object="${edited_user}" method="POST" accept-charset="UTF-8">
+        <form th:action="@{/authenticated/admin/edit}" th:object="${edited_user}" method="POST" accept-charset="UTF-8">
 
             <!-- Скрытое поле для ID, чтобы отправлять его на сервер -->
             <input type="hidden" th:field="*{id}" />
@@ -49,20 +49,28 @@
             <input type="text" id="user_address_label" th:field="*{address}" size="70" maxlength="150" required />
             <br/><br/><br/>
 
+            <!-- Чек-боксы для ролей пользователя -->
+            <table border="0">
+                <tr th:each="existing_role : ${all_existing_roles}">
+                    <td th:text="${existing_role}">Role</td>
+                </tr>
+            </table>
+            <br/><br/><br/>
+
             <!-- Кнопка сохранения изменений -->
             <input type="submit" value="-= Save Changes =-">
         </form>
         <br/>
 
         <!-- Кнопка удаления пользователя (через GET-запрос для подтверждения удаления) -->
-        <form method="GET" th:action="@{/users/delete}">
+        <form method="GET" th:action="@{/authenticated/admin/delete}">
             <input type="hidden" name="id_removed_user" th:value="${edited_user.id}" />
             <input type="submit" value="-= Delete =-" />
         </form>
         <br/>
 
         <!-- Кнопка отмены редактирования -->
-        <form th:method="GET" th:action="@{/users/all}" accept-charset="UTF-8">
+        <form th:method="GET" th:action="@{/authenticated/admin/all}" accept-charset="UTF-8">
             <input type="submit" value="-= Cancel =-" />
         </form>
         <br/> <br/> <hr/> <br/> <br/>

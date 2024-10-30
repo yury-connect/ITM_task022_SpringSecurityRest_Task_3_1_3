@@ -57,6 +57,16 @@
                 <td>Email</td>
                 <td th:text="${viewed_user.getEmail()}">Email</td>
             </tr>
+            <tr>
+                <td>Roles</td>
+                <td>
+                <table border="0">
+                    <tr th:each="role : ${viewed_user.getRoles()}">
+                        <td th:text="${role}">Role</td>
+                    </tr>
+                </table>
+                </td>
+            </tr>
 
             <!-- Личная информация -->
             <tr>
@@ -82,7 +92,7 @@
             <tr>
                 <!-- Кнопка редактирования пользователя -->
                 <td class="button-container">
-                    <form method="GET" th:action="@{/users/edit}">
+                    <form method="GET" th:action="@{/authenticated/admin/edit}">
                         <input type="hidden" name="id_edited_user" th:value="${viewed_user.id}" />
                         <input type="submit" value="-= Edit =-"/>
                     </form>
@@ -90,7 +100,7 @@
 
                 <!-- Кнопка удаления пользователя (с изменением метода на POST) -->
                 <td class="button-container">
-                    <form method="POST" th:action="@{/users/delete}">
+                    <form method="POST" th:action="@{/authenticated/admin/delete}">
                         <input type="hidden" name="id_removed_user" th:value="${viewed_user.id}" />
                         <input type="hidden" name="_method" value="DELETE"/>
                         <button type="submit">-= Delete =-</button>
@@ -99,7 +109,7 @@
 
                 <!-- Кнопка отмены и возврата ко всем пользователям -->
                 <td class="button-container">
-                    <form method="GET" th:action="@{/users/all}">
+                    <form method="GET" th:action="@{/authenticated/admin/all}">
                         <input type="submit" value="-= Cancel =-"/>
                     </form>
                 </td>

@@ -26,7 +26,7 @@
 
             <!-- Кнопка просмотра пользователя -->
             <td style="text-align: center;">
-                <form method="GET" th:action="@{/users/view}">
+                <form method="GET" th:action="@{/authenticated/admin/view}">
                     <input type="hidden" name="id_viewed_user" th:value="${user.getId()}" />
                     <button type="submit"><em><b>View</b></em></button>
                 </form>
@@ -34,7 +34,7 @@
 
             <!-- Кнопка редактирования пользователя -->
             <td style="text-align: center;">
-                <form method="GET" th:action="@{/users/edit}">
+                <form method="GET" th:action="@{/authenticated/admin/edit}">
                     <input type="hidden" name="id_edited_user" th:value="${user.getId()}" />
                     <button type="submit"><em><b>Edit</b></em></button>
                 </form>
@@ -42,7 +42,7 @@
 
             <!-- Кнопка удаления пользователя (через POST-запрос) -->
             <td style="text-align: center;">
-                <form method="POST" th:action="@{/users/delete}">
+                <form method="POST" th:action="@{/authenticated/admin/delete}">
                     <input type="hidden" name="id_removed_user" th:value="${user.getId()}" />
                     <button type="submit"><em><b>Delete</b></em></button>
                 </form>
@@ -52,14 +52,14 @@
     <br/> <br/> <hr/> <br/>
 
     <!-- Кнопка добавления нового пользователя -->
-    <form th:method="GET" th:action="@{/users/create}">
+    <form th:method="GET" th:action="@{/authenticated/admin/create}">
         <input type="submit" value="-= Add a new user =-"/>
     </form>
     <br/> <br/> <hr/> <br/>
 
     <!-- Форма для генерации тестовых данных -->
     <h3>Generating test user data for tables</h3>
-    <form action="#" th:action="@{/users/generate}" method="GET">
+    <form action="#" th:action="@{/authenticated/admin/generate}" method="GET">
         <label for="count_label">Enter the number of new users generated: </label>
         <input type="number" id="count_label" name="count_generated_users" th:value="3" size="8" maxlength="6" required>
         <button type="submit">-= Generate! =-</button>
@@ -67,7 +67,7 @@
     <br/> <br/> <hr/> <br/>
 
     <!-- Кнопка для удаления всех пользователей -->
-    <form th:method="POST" th:action="@{/users/delete_all}">
+    <form th:method="POST" th:action="@{/authenticated/admin/delete_all}">
         <input type="submit" value="-= Delete all user =-"/>
     </form>
     <br/> <br/>
