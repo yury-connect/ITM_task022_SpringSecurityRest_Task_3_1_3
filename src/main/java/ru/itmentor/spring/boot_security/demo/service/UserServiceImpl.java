@@ -1,7 +1,6 @@
 package ru.itmentor.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,12 +29,13 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
+    @Transactional
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
 
     @Override
     public User findUserById(int id) {
@@ -49,11 +49,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
         userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void deleteUserById(int id) {
         userRepository.deleteById(id);
     }
@@ -65,7 +67,15 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUserName(),
                 user.getPassword(),
-                user.getRoles()
+                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.toString())).collect(Collectors.toSet())
         );
     }
+
+//    private Collection<GrantedAuthority> roleStringToGrantedAuthorities(Set<Role> roleSet) {
+//        Collection<GrantedAuthority> authorities =
+//                roleSet.stream()
+//                        .map(str -> new SimpleGrantedAuthority(str.toString()))
+//                        .collect(Collectors.toList());
+//        return authorities;
+//    }
 }

@@ -2,24 +2,31 @@ package ru.itmentor.spring.boot_security.demo.util;
 
 import com.ibm.icu.text.Transliterator;
 import net.datafaker.Faker;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.model.User;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public  class UserUtils {
+/**
+ * @author Yury
+ * Утилитный класс для генерации новых фейковых тестовых пользователей
+ */
+public final class UserGenerator {
 
     private static final String USER_PASSWORD_DEFAULT = "1";
+    private static final Random RANDOM = new Random();
 
 
-    public static List<User> generateUsers(int count) {
-        List<User> users = Stream.generate(() -> generateUser())
+    public static List<User> generateUsers(int count, List<Role> allExistingRoles, PasswordEncoder passwordEncoder) {
+
+        List<User> users = Stream.generate(() -> generateUser(allExistingRoles, passwordEncoder))
                 .limit(count) // Количество элементов в списке
                 .collect(Collectors.toList());
         return users;
@@ -34,7 +41,7 @@ public  class UserUtils {
     }
 
 
-    public static User generateUser() {
+    public static User generateUser(List<Role> allExistingRoles, PasswordEncoder passwordEncoder) {
         Faker faker = new Faker(new Locale("ru"));
         Transliterator transliterator = Transliterator.getInstance("Russian-Latin/BGN");   // Создание транслитератора
 
@@ -47,12 +54,18 @@ public  class UserUtils {
 
         String email = faker.internet().emailAddress(userName);
 
-        String password = USER_PASSWORD_DEFAULT;
+        String password = passwordEncoder.encode(USER_PASSWORD_DEFAULT);
 
         final LocalDate startDate = LocalDate.of(1970, 1, 1);
         final LocalDate endDate = LocalDate.of(2024, 10, 1);
         Date dateBirth = Date.valueOf(generateRandomDate(startDate, endDate));
         String address = faker.address().fullAddress();
+
+        int rolesCount = RANDOM.nextInt(allExistingRoles.size()) + 1;
+        Set<Role> roles = Stream.generate(
+                () -> allExistingRoles.stream().findAny().get())
+                .limit(rolesCount)
+                .collect(Collectors.toSet());
 
         return User.builder()
                 .id(-1)
@@ -60,8 +73,9 @@ public  class UserUtils {
                 .password(password)
                 .email(email)
                 .fullName(fullName)
-                .address(address)
                 .dateBirth(dateBirth)
+                .address(address)
+                .roles(roles)
                 .build();
     }
 }
