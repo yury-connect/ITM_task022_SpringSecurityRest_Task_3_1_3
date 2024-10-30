@@ -1,9 +1,6 @@
 package ru.itmentor.spring.boot_security.demo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -24,4 +21,10 @@ public class Role {
 
     @Column(name = "role_name",nullable = false, unique = true)
     private String name;
+
+
+    @Override
+    public String toString() {
+        return name; // Важно, чтобы toString возвращало именно ИМЯ роли, использую при парсинге родей из org.springframework.security.core.authority.AuthorityUtils
+    }
 }
