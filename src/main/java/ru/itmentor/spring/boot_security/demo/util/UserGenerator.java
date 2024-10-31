@@ -65,7 +65,8 @@ public final class UserGenerator {
 
         String email = faker.internet().emailAddress(userName);
 
-        String password = passwordEncoder.encode(USER_PASSWORD_DEFAULT);
+        String password = USER_PASSWORD_DEFAULT;
+//        String password = passwordEncoder.encode(USER_PASSWORD_DEFAULT);
 
         final LocalDate startDate = LocalDate.of(1970, 1, 1);
         final LocalDate endDate = LocalDate.of(2024, 10, 1);
