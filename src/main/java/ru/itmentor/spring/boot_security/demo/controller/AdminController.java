@@ -37,7 +37,6 @@ public class AdminController extends AbstractController {
     // Перенаправление на список всех пользователей (GET)
     @GetMapping()
     public String root() { // В этом случае - перенаправлю на страничку по умолчанию
-        System.out.println("\n\tAdminController:root\n");
         return "redirect:/authenticated/admin/all";
     }
 
@@ -111,7 +110,6 @@ public class AdminController extends AbstractController {
     // Подтверждение удаления пользователя (GET)
     @GetMapping("/delete")
     public String showDeleteUserPage(@RequestParam("id_removed_user") Integer id, Model model) {
-        System.out.println("ID for deletion: " + id); // Добавьте отладочный вывод                   *** *** *** *** ***   УДАЛИТЬ   *** *** *** ***
         model.addAttribute("removed_user", userService.findUserById(id));
         return "admin-pages/delete_user_page";
     }
@@ -138,8 +136,6 @@ public class AdminController extends AbstractController {
     public String showCurrentUserPage(Model model) {
         User currentUser = getCurrentUser(); // получаю (GET) залогиненного пользователя из общего суперкласса
         currentUser.setPassword(PASSWORD_PLACE_HOLDER);
-
-        System.out.println("\n\n\tAdminController// showCurrentUserPage: currentUser = " + currentUser + "\n\n");
 
         model.addAttribute("viewed_user", currentUser);
         return "users_pages/user_info_page";

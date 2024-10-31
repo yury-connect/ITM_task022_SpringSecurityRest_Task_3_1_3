@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
+
 
 @Service
 public class UserUtilServiceImpl implements UserUtilService{
@@ -23,9 +25,6 @@ public class UserUtilServiceImpl implements UserUtilService{
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserGenerator userGenerator;
-
-    private static final String DEFAULT_PASSWORD = "1"; // такой пароль ПО УМОЛЧАНИЮ будет у всех пользователей
-
 
 
     @Autowired
@@ -50,10 +49,6 @@ public class UserUtilServiceImpl implements UserUtilService{
     public List<User> generateNewUsers(int count) {
         List<Role> allExistingRoles = roleRepository.findAll();
 
-//        System.out.println("\n\n\tallExistingRoles = " + allExistingRoles.size());
-//        allExistingRoles.stream().forEach(System.out::println);
-//        System.out.println();
-
         List<User> userList;
         Set<Role> rolesDefault = allExistingRoles.stream()
                 .filter(role -> "ROLE_GUEST".equals(role.getName()))
@@ -64,7 +59,7 @@ public class UserUtilServiceImpl implements UserUtilService{
             userList.add(User.builder()
                     .id(-1) // при создании ставим заведомо несуществующий id
                     .userName("userLogin")
-                    .password(passwordEncoder.encode(DEFAULT_PASSWORD))
+                    .password(USER_PASSWORD_DEFAULT)
                     .email("userEmail@example.com")
                     .fullName("userFullName")
                     .dateBirth(new Date(System.currentTimeMillis()))
@@ -85,6 +80,9 @@ public class UserUtilServiceImpl implements UserUtilService{
      */
     @Override
     public void generateTestData(int count) {
-        userRepository.saveAll(generateNewUsers(count));
+        generateNewUsers(count)
+                .stream()
+                .peek(user -> user.setPassword(passwordEncoder.encode(user.getPassword())))
+                .forEach(userRepository::save);
     }
 }

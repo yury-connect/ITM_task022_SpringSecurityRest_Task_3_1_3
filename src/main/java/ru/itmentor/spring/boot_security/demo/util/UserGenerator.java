@@ -2,8 +2,6 @@ package ru.itmentor.spring.boot_security.demo.util;
 
 import com.ibm.icu.text.Transliterator;
 import net.datafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.model.User;
@@ -25,15 +23,7 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PAS
 @Component
 public final class UserGenerator {
 
-    private PasswordEncoder passwordEncoder;
     private static final Random RANDOM = new Random();
-
-
-    @Autowired
-    public UserGenerator(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
 
 
     public List<User> generateUsers(int count, List<Role> allExistingRoles) {
@@ -66,7 +56,6 @@ public final class UserGenerator {
         String email = faker.internet().emailAddress(userName);
 
         String password = USER_PASSWORD_DEFAULT;
-//        String password = passwordEncoder.encode(USER_PASSWORD_DEFAULT);
 
         final LocalDate startDate = LocalDate.of(1970, 1, 1);
         final LocalDate endDate = LocalDate.of(2024, 10, 1);

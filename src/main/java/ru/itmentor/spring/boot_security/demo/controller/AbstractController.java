@@ -8,14 +8,15 @@ import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 
 
-
 public abstract class AbstractController {
 
     protected UserService userService;
 
+
     protected AbstractController(UserService userService) {
         this.userService = userService;
     }
+
 
     // Получение залогиненного пользователя
     protected User getCurrentUser() {

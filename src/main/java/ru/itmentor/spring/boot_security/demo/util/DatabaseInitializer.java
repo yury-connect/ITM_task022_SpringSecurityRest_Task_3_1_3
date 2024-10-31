@@ -1,20 +1,15 @@
 package ru.itmentor.spring.boot_security.demo.util;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import ru.itmentor.spring.boot_security.demo.configs.PasswordEncoderConfig;
-import ru.itmentor.spring.boot_security.demo.constants.Constants;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.RoleService;
+import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
@@ -30,11 +25,11 @@ import java.util.Set;
 @Component
 public class DatabaseInitializer implements CommandLineRunner {
 
+    private final UserUtilService userUtilService;
     private EntityManagerFactory entityManagerFactory;
     private UserService userService;
     private RoleService roleService;
     private UserGenerator userGenerator;
-    private PasswordEncoder passwordEncoder;
 
 
 
@@ -43,12 +38,12 @@ public class DatabaseInitializer implements CommandLineRunner {
                                UserService userService,
                                RoleService roleService,
                                UserGenerator userGenerator,
-                               PasswordEncoder passwordEncoder) {
+                               UserUtilService userUtilService) {
         this.entityManagerFactory = entityManagerFactory;
         this.userService = userService;
         this.roleService = roleService;
         this.userGenerator = userGenerator;
-        this.passwordEncoder = passwordEncoder;
+        this.userUtilService = userUtilService;
     }
 
 
@@ -153,18 +148,20 @@ public class DatabaseInitializer implements CommandLineRunner {
         List<User> allExistingUsers = userGenerator.generateUsers(4, roleService.findAllRoles());
         allExistingUsers.get(0).setUserName("guest");
         allExistingUsers.get(0).setRoles(Set.of(roleGuest));
-//        allExistingUsers.get(0).setPassword(passwordEncoder.encode(Constants.USER_PASSWORD_DEFAULT));
+
         allExistingUsers.get(1).setUserName("user");
         allExistingUsers.get(1).setRoles(Set.of(roleGuest, roleUser));
-//        allExistingUsers.get(1).setPassword(passwordEncoder.encode(Constants.USER_PASSWORD_DEFAULT));
+
         allExistingUsers.get(2).setUserName("admin");
         allExistingUsers.get(2).setRoles(Set.of(roleGuest, roleUser, roleAdmin));
-//        allExistingUsers.get(2).setPassword(passwordEncoder.encode(Constants.USER_PASSWORD_DEFAULT));
+
         allExistingUsers.get(3).setUserName("superadmin");
         allExistingUsers.get(3).setRoles(Set.of(roleGuest, roleUser, roleAdmin, roleSuperAdmin));
-//        allExistingUsers.get(3).setPassword(passwordEncoder.encode(Constants.USER_PASSWORD_DEFAULT));
 
         allExistingUsers.forEach(userService::createUser);
+
+        // Создание рандомных тестовых пользователей
+        userUtilService.generateTestData(6);
 
         System.out.println("Тестовые данные заполнены успешно // Test data populated successfully.");
     }
