@@ -22,16 +22,21 @@ public class UserUtilServiceImpl implements UserUtilService{
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserGenerator userGenerator;
 
     private static final String DEFAULT_PASSWORD = "1"; // такой пароль ПО УМОЛЧАНИЮ будет у всех пользователей
 
 
 
     @Autowired
-    public UserUtilServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserUtilServiceImpl(UserRepository userRepository,
+                               RoleRepository roleRepository,
+                               PasswordEncoder passwordEncoder,
+                               UserGenerator userGenerator) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userGenerator = userGenerator;
     }
 
 
@@ -68,7 +73,7 @@ public class UserUtilServiceImpl implements UserUtilService{
                     .build()
             );
         } else {
-            userList = UserGenerator.generateUsers(count, allExistingRoles, passwordEncoder);
+            userList = userGenerator.generateUsers(count, allExistingRoles);
         }
         return userList;
     }

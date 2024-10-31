@@ -2,7 +2,9 @@ package ru.itmentor.spring.boot_security.demo.util;
 
 import com.ibm.icu.text.Transliterator;
 import net.datafaker.Faker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.model.User;
 
@@ -20,21 +22,29 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PAS
  * @author Yury
  * Утилитный класс для генерации новых фейковых тестовых пользователей
  */
+@Component
 public final class UserGenerator {
 
+    private PasswordEncoder passwordEncoder;
     private static final Random RANDOM = new Random();
 
 
-    public static List<User> generateUsers(int count, List<Role> allExistingRoles, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public UserGenerator(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
-        List<User> users = Stream.generate(() -> generateUser(allExistingRoles, passwordEncoder))
+
+
+    public List<User> generateUsers(int count, List<Role> allExistingRoles) {
+        List<User> users = Stream.generate(() -> generateUser(allExistingRoles))
                 .limit(count) // Количество элементов в списке
                 .collect(Collectors.toList());
         return users;
     }
 
 
-    private static LocalDate generateRandomDate(LocalDate startDate, LocalDate endDate) {
+    private LocalDate generateRandomDate(LocalDate startDate, LocalDate endDate) {
         long startEpochDay = startDate.toEpochDay();
         long endEpochDay = endDate.toEpochDay();
         long randomEpochDay = ThreadLocalRandom.current().nextLong(startEpochDay, endEpochDay + 1);
@@ -42,7 +52,7 @@ public final class UserGenerator {
     }
 
 
-    public static User generateUser(List<Role> allExistingRoles, PasswordEncoder passwordEncoder) {
+    public User generateUser(List<Role> allExistingRoles) {
         Faker faker = new Faker(new Locale("ru"));
         Transliterator transliterator = Transliterator.getInstance("Russian-Latin/BGN");   // Создание транслитератора
 

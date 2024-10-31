@@ -3,10 +3,12 @@ package ru.itmentor.spring.boot_security.demo.util;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itmentor.spring.boot_security.demo.configs.PasswordEncoderConfig;
+import ru.itmentor.spring.boot_security.demo.constants.Constants;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
@@ -27,19 +29,26 @@ import java.util.Set;
  */
 @Component
 public class DatabaseInitializer implements CommandLineRunner {
-//public class DatabaseInitializer  {
 
     private EntityManagerFactory entityManagerFactory;
     private UserService userService;
     private RoleService roleService;
+    private UserGenerator userGenerator;
+    private PasswordEncoder passwordEncoder;
 
 
 
     @Autowired
-    public DatabaseInitializer(EntityManagerFactory entityManagerFactory, UserService userService, RoleService roleService) {
+    public DatabaseInitializer(EntityManagerFactory entityManagerFactory,
+                               UserService userService,
+                               RoleService roleService,
+                               UserGenerator userGenerator,
+                               PasswordEncoder passwordEncoder) {
         this.entityManagerFactory = entityManagerFactory;
         this.userService = userService;
         this.roleService = roleService;
+        this.userGenerator = userGenerator;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -55,7 +64,7 @@ public class DatabaseInitializer implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         if (!isDatabaseValid()) {
-//            resetDatabase();
+            resetDatabase();
             populateTestData();
         }
     }
@@ -107,7 +116,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
 
 
-    private void resetDatabase() {
+    public void resetDatabase() {
         // Удаляем и пересоздаем базу данных (альтернатива: пересоздать схему через Hibernate)
 //        EntityManager entityManager = entityManagerFactory.createEntityManager();
 //        entityManager.getTransaction().begin();
@@ -118,7 +127,11 @@ public class DatabaseInitializer implements CommandLineRunner {
 //
 //        entityManager.getTransaction().commit();
 //        entityManager.close();  // Закрываем только EntityManager, но не EntityManagerFactory !!!
-//
+
+        // Очистка таблиц без удаления схемы
+//        entityManager.createNativeQuery("TRUNCATE TABLE user_roles CASCADE").executeUpdate();
+//        entityManager.createNativeQuery("TRUNCATE TABLE users CASCADE").executeUpdate();
+//        entityManager.createNativeQuery("TRUNCATE TABLE roles CASCADE").executeUpdate();
 //        System.out.println("\n\n\n\tDatabase reset completed.\n\n\n");
     }
 
@@ -137,15 +150,19 @@ public class DatabaseInitializer implements CommandLineRunner {
         roleService.createRole(roleSuperAdmin);
 
         // Создание тестовых пользователей
-        List<User> allExistingUsers = UserGenerator.generateUsers(4, roleService.findAllRoles(), new PasswordEncoderConfig().passwordEncoder());
+        List<User> allExistingUsers = userGenerator.generateUsers(4, roleService.findAllRoles());
         allExistingUsers.get(0).setUserName("guest");
         allExistingUsers.get(0).setRoles(Set.of(roleGuest));
+//        allExistingUsers.get(0).setPassword(passwordEncoder.encode(Constants.USER_PASSWORD_DEFAULT));
         allExistingUsers.get(1).setUserName("user");
         allExistingUsers.get(1).setRoles(Set.of(roleGuest, roleUser));
+//        allExistingUsers.get(1).setPassword(passwordEncoder.encode(Constants.USER_PASSWORD_DEFAULT));
         allExistingUsers.get(2).setUserName("admin");
         allExistingUsers.get(2).setRoles(Set.of(roleGuest, roleUser, roleAdmin));
+//        allExistingUsers.get(2).setPassword(passwordEncoder.encode(Constants.USER_PASSWORD_DEFAULT));
         allExistingUsers.get(3).setUserName("superadmin");
         allExistingUsers.get(3).setRoles(Set.of(roleGuest, roleUser, roleAdmin, roleSuperAdmin));
+//        allExistingUsers.get(3).setPassword(passwordEncoder.encode(Constants.USER_PASSWORD_DEFAULT));
 
         allExistingUsers.forEach(userService::createUser);
 

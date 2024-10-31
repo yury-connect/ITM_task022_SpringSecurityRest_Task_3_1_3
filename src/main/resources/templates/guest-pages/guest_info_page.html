@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <meta charset="UTF-8">
+        <title>Guest info page</title>
+    </head>
+
+    <body>
+    <h1>Guest info page</h1>
+    <h3>Guest, welcome spring boot security page!</h3>
+    <br/> <br/> <br/> <br/>
+
+    <H1 th:text="${current_time}">The current time</H1>
+
+    <!-- Кнопки управления -->
+
+    <!-- Кнопка отмены и возврата на стартовую страницу -->
+    <table border="0">
+        <tr>
+            <td style="width: 400px; text-align: right;">Переход к стартовой странице</td>
+            <td class="button-container" style="width: 150px; text-align: left;">
+                <form method="GET" th:action="@{/}">
+                    <input type="submit" value="-= To greeting page =-"/>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <br/> <br/> <hr/> <br/> <br/>
+
+    <!-- Кнопка разлогинивания -->
+    <table border="0">
+        <tr>
+            <td style="width: 400px; text-align: right;">Кнопка ралогинивания:</td>
+            <!-- Кнопка отмены и возврата ко всем пользователям -->
+            <td class="button-container" style="width: 150px; text-align: left;">
+                <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
+                    <input type="submit" value="-= LogOut =-" />
+                </form>
+            </td>
+        </tr>
+    </table>
+    <br/> <br/> <hr/> <br/> <br/>
+
+    </body>
+</html>

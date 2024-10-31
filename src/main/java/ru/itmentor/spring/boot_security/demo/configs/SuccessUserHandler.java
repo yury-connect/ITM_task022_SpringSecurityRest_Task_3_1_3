@@ -35,18 +35,23 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
         if (roles.contains("ROLE_SUPERADMIN")) {
             System.out.println("\n\nВ систему вошел Супер-пупер Admin с ролью ROLE_SUPERADMIN\n\n");
             response.sendRedirect("/authenticated/admin/all");
+
         } else if (roles.contains("ROLE_ADMIN")) {
             System.out.println("\n\nВ систему вошел Admin с ролью ROLE_ADMIN\n\n");
             response.sendRedirect("/authenticated/admin/all");
+
         } else if (roles.contains("ROLE_USER")) {
             System.out.println("\n\nЭто просто User // ROLE_USER\n\n");
             response.sendRedirect("/authenticated/user");
+
         } else if (roles.contains("ROLE_GUEST")) {
             System.out.println("\n\nГость залетный Guest // ROLE_GUEST\n\n");
-            response.sendRedirect("/authenticated");
+            response.sendRedirect("/authenticated/guest");
+
         } else {
             System.out.println("\n\nРоль отсутствует //  не обработана\n\n");
             response.sendRedirect("/");
+
         }
     }
 }
