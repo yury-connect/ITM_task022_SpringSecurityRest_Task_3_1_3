@@ -27,8 +27,8 @@
 
     <body>
     <h1>User info page</h1>
-    <h1>User, welcome spring boot security page!</h1>
-    <H2>Вывожу основную информацию о текущем пользователе системы:</H2>
+    <h3>User, welcome spring boot security page!</h3>
+    <H4>Вывожу основную информацию о текущем пользователе системы:</H4>
 
     <!-- Таблица для отображения данных пользователя -->
     <table border="5">
@@ -90,13 +90,14 @@
     <br/> <br/> <br/>
 
     <!-- Кнопки управления -->
+
+    <!-- Кнопка отмены и возврата на стартовую страницу -->
     <table border="0">
         <tr>
-
-            <!-- Кнопка отмены и возврата ко всем пользователям -->
-            <td class="button-container">
-                <form method="GET" th:action="@{/authenticated/admin/all}">
-                    <input type="submit" value="-= Cancel =-"/>
+            <td style="width: 400px; text-align: right;">Переход к стартовой странице</td>
+            <td class="button-container" style="width: 150px; text-align: left;">
+                <form method="GET" th:action="@{/}">
+                    <input type="submit" value="-= To greeting page =-"/>
                 </form>
             </td>
         </tr>
@@ -104,9 +105,20 @@
     <br/> <br/> <hr/> <br/> <br/>
 
     <!-- Кнопка разлогинивания -->
-    <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
-        <input type="submit" value="-= LogOut =-" />
-    </form>
+    <table border="0">
+        <tr>
+            <td style="width: 400px; text-align: right;">Кнопка ралогинивания:</td>
+            <!-- Кнопка отмены и возврата ко всем пользователям -->
+            <td class="button-container" style="width: 150px; text-align: left;">
+                <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
+                    <input type="submit" value="-= LogOut =-" />
+                </form>
+            </td>
+        </tr>
+    </table>
+<!--    <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">-->
+<!--        <input type="submit" value="-= LogOut =-" />-->
+<!--    </form>-->
     <br/> <br/> <hr/> <br/> <br/>
 
     </body>

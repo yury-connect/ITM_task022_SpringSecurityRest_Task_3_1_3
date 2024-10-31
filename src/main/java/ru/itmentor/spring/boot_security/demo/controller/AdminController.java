@@ -139,7 +139,7 @@ public class AdminController extends AbstractController {
         User currentUser = getCurrentUser(); // получаю (GET) залогиненного пользователя из общего суперкласса
         currentUser.setPassword(PASSWORD_PLACE_HOLDER);
 
-        System.out.println("\n\n\tshowCurrentUserPage: currentUser = " + currentUser + "\n\n");
+        System.out.println("\n\n\tAdminController// showCurrentUserPage: currentUser = " + currentUser + "\n\n");
 
         model.addAttribute("viewed_user", currentUser);
         return "users_pages/user_info_page";
