@@ -62,9 +62,15 @@ public final class UserGenerator {
         Date dateBirth = Date.valueOf(generateRandomDate(startDate, endDate));
         String address = faker.address().fullAddress();
 
+        // Перемешиваем список ролей для случайного порядка
+        List<Role> shuffledRoles = new ArrayList<>(allExistingRoles);
+        Collections.shuffle(shuffledRoles);
+
+        // Получаем случайное количество ролей
         int rolesCount = RANDOM.nextInt(allExistingRoles.size()) + 1;
-        Set<Role> roles = Stream.generate(
-                () -> allExistingRoles.stream().findAny().get())
+
+        // Собираем уникальные роли в Set, взяв первые rolesCount элементов из перемешанного списка
+        Set<Role> roles = shuffledRoles.stream()
                 .limit(rolesCount)
                 .collect(Collectors.toSet());
 
