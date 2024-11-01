@@ -35,7 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeRequests() // определяет, какие пользователи могут получить доступ к каким URL на основе их ролей и аутентификационного статуса.
-                .antMatchers("/css/**", "/public/**", "/login").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
+                .antMatchers("/css/**", "/public/**", "/login", "/loginURL").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
 
 //                .antMatchers("/authenticated/admin").permitAll() // УДАЛИТЬ
 
@@ -46,6 +46,14 @@ public class SecurityConfig {
 
             .and()
                 .formLogin() // по умолчанию Spring сгенерит форму (как в нашем случае), ЛИБО для авторизации будет 'НАША красивая сверстанная форма'
+//                .formLogin(login -> login.loginPage("/loginURL")) //  для авторизации будет НАША красивая сверстанная форма
+
+
+
+
+//                .loginPage("sevice-pages/login_page") // Указывает Spring Security на кастомную страницу логина
+                .loginPage("/loginURL")
+
 //                .loginPage("/login") // или можно '.loginPage("/custom-login")' Указывает Spring Security на кастомную страницу логина
 //                .loginProcessingUrl("/custom-login-processing") // -чтобы запросы на вход обрабатывались по определенному URL
 //                .failureHandler() // кастомный обработчик для ошибки авторизации
@@ -73,9 +81,11 @@ public class SecurityConfig {
 //                .and()
 //                .csrf()
 //                .ignoringAntMatchers("/css/**", "/public/**") // Исключить определенные URL из CSRF-защиты
+
+//                .csrf().disable(); // временно отключить CSRF-защиту
         ;
 
-        http.csrf().disable(); // временно отключить CSRF-защиту
+        http.csrf().disable(); // ЛИБО можно так - временно отключить CSRF-защиту
         return http.build();
 
 
