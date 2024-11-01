@@ -37,7 +37,7 @@ public class SecurityConfig {
             .authorizeRequests() // определяет, какие пользователи могут получить доступ к каким URL на основе их ролей и аутентификационного статуса.
                 .antMatchers("/css/**", "/public/**", "/login").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
 
-                .antMatchers("/authenticated/admin").permitAll() // УДАЛИТЬ
+//                .antMatchers("/authenticated/admin").permitAll() // УДАЛИТЬ
 
                 .antMatchers("/authenticated/**").authenticated() // если пойдем в сторону "/authenticated/**" то пустит только Аутентифицированных.
                 .antMatchers("/authenticated/user/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN") // на страницы пользователей пускаем только С РОЛЬЮ 'USER', 'ADMIN' и 'SUPERADMIN'
@@ -45,17 +45,54 @@ public class SecurityConfig {
                 .anyRequest().authenticated() // любой другой запрос требует аутентификации. Если запрос не подпадает под вышеперечисленные условия, пользователю все равно нужно будет пройти аутентификацию.
 
             .and()
-                .formLogin()
-//                .loginPage("/login")
+                .formLogin() // по умолчанию Spring сгенерит форму (как в нашем случае), ЛИБО для авторизации будет 'НАША красивая сверстанная форма'
+//                .loginPage("/login") // или можно '.loginPage("/custom-login")' Указывает Spring Security на кастомную страницу логина
+//                .loginProcessingUrl("/custom-login-processing") // -чтобы запросы на вход обрабатывались по определенному URL
+//                .failureHandler() // кастомный обработчик для ошибки авторизации
                 .successHandler(successUserHandler) // кастомный обработчик для перенаправления при успешной аутентификации
-                .permitAll()
+                .permitAll()  // Разрешение доступа к странице логина для всех
 
             .and()
-                .logout()
-                .logoutSuccessUrl("/")
-                .permitAll();
+                .logout() // настройки выхода из системы
+                .logoutSuccessUrl("/") // при 'logout' будет вести на корневую страницу нашего приложения.
+                .permitAll() // Разрешение доступа к странице при 'logout' для всех
+
+//                .and()
+//                .rememberMe() // Функция "Запомнить меня" полезна, если вы хотите, чтобы пользователи оставались залогиненными после закрытия браузера.
+//                .key("uniqueAndSecretKey")  // Уникальный ключ для функции
+//                .tokenValiditySeconds(86400)  // Срок действия в секундах (например, один день)
+//                .userDetailsService(userDetailsService()) // определяем UserDetailsService
+
+
+                .and()
+                .sessionManagement() // ограничение на количество активных сессий для одного пользователя или указать параметры сессий для повышения безопасности
+                .maximumSessions(3)
+                .expiredUrl("/session-expired")
+
+//                .and()
+//                .and()
+//                .csrf()
+//                .ignoringAntMatchers("/css/**", "/public/**") // Исключить определенные URL из CSRF-защиты
+        ;
 
         http.csrf().disable(); // временно отключить CSRF-защиту
         return http.build();
+
+
+    /*
+        // аутентификация -= InMemory =-
+        @Bean
+        @Override
+        public UserDetailsService userDetailsService() {
+            UserDetails user =
+                    User.withDefaultPasswordEncoder()
+                            .username("user")
+                            .password("user")
+                            .roles("USER")
+                            .build();
+
+            return new InMemoryUserDetailsManager(user);
+        }
+    */
     }
 }
