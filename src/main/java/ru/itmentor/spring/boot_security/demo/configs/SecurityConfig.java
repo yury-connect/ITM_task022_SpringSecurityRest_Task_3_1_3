@@ -35,7 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeRequests() // определяет, какие пользователи могут получить доступ к каким URL на основе их ролей и аутентификационного статуса.
-                .antMatchers("/css/**", "/public/**", "/login", "/loginURL").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
+                .antMatchers("/css/**", "/public/**", "/login", "/loginURL", "/registrate").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
 
 //                .antMatchers("/authenticated/admin").permitAll() // УДАЛИТЬ
 
