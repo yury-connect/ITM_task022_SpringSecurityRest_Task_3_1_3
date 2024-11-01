@@ -78,6 +78,9 @@ _Spring Security_ базируется на 2х интерфейсах, кото
 
 ---
 
+---
+
+---
 
 [Ссылка на оригинальную страницу](http://jira.it-mentor.tech/browse/ITMPJ-2764)
 
@@ -89,7 +92,7 @@ _Spring Security_ базируется на 2х интерфейсах, кото
 
 > Основные маршруты проекта:
 >
-> `http://localhost:8080/login` - залогиниться> 
+> `http://localhost:8080/login` - залогиниться
 > `http://localhost:8080/logout` - разлогиниться
 >
 > `http://localhost:8080/authenticated/superadmin` - админка (для Супер-админов, доп. возможности)
