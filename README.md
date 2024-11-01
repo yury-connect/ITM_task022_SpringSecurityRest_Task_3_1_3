@@ -155,40 +155,40 @@ main
 │                               UserGenerator.java
 │
 └───resources
-│       application─mysql.properties
-│       application─postgresql.properties
-│       application.properties
-│
-├───SQLs
-│       sql_examples.sql
-│       SQL_PostgreSQL_scrypt_1_delete_tables.sql
-│       SQL_PostgreSQL_scrypt_2_create_tebles.sql
-│       SQL_PostgreSQL_scrypt_3_add_users.sql
-│       SQL_PostgreSQL_scrypt_FULL.sql
-│
-├───static
-│   └───css
-│           styles.css
-│
-└───templates
-    ├───admin─pages
-    │       all_users.html
-    │       create_user_page.html
-    │       delete_user_page.html
-    │       update_user_page.html
-    │       view_user_page.html
+    │       application─mysql.properties
+    │       application─postgresql.properties
+    │       application.properties
     │
-    ├───guest─pages
-    │       guest_info_page.html
+    ├───SQLs
+    │       sql_examples.sql
+    │       SQL_PostgreSQL_scrypt_1_delete_tables.sql
+    │       SQL_PostgreSQL_scrypt_2_create_tebles.sql
+    │       SQL_PostgreSQL_scrypt_3_add_users.sql
+    │       SQL_PostgreSQL_scrypt_FULL.sql
     │
-    ├───sevice─pages
-    │       greating_page.html
-    │       login_page.html
-    │       registration_page.html
-    │       system─info.html
+    ├───static
+    │   └───css
+    │           styles.css
     │
-    └───users_pages
-            user_info_page.html
+    └───templates
+        ├───admin─pages
+        │       all_users.html
+        │       create_user_page.html
+        │       delete_user_page.html
+        │       update_user_page.html
+        │       view_user_page.html
+        │
+        ├───guest─pages
+        │       guest_info_page.html
+        │
+        ├───sevice─pages
+        │       greating_page.html
+        │       login_page.html
+        │       registration_page.html
+        │       system─info.html
+        │
+        └───users_pages
+                user_info_page.html
 
 ```
 
