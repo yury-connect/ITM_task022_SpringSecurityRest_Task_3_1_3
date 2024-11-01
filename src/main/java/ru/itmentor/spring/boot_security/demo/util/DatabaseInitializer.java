@@ -90,7 +90,7 @@ public class DatabaseInitializer implements CommandLineRunner {
 
             return true;
         } catch (PersistenceException e) {
-            System.out.println("Database or tables are missing or invalid.:" + e.getMessage());
+            System.out.println("\n\n\tDatabase or tables are missing or invalid.:" + e.getMessage() + "\n\n\n");
             return false;
         }
     }

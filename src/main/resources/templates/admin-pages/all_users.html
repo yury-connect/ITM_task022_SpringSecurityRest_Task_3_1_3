@@ -49,13 +49,13 @@
             </td>
         </tr>
     </table>
-    <br/> <br/> <hr/> <br/>
+    <br/> <hr/> <br/>
 
     <!-- Кнопка добавления нового пользователя -->
     <form th:method="GET" th:action="@{/authenticated/admin/create}">
         <input type="submit" value="-= Add a new user =-"/>
     </form>
-    <br/> <br/> <hr/> <br/>
+    <br/> <hr/> <br/>
 
     <!-- Форма для генерации тестовых данных -->
     <h3>Generating test user data for tables</h3>
@@ -64,23 +64,38 @@
         <input type="number" id="count_label" name="count_generated_users" th:value="3" size="8" maxlength="6" required>
         <button type="submit">-= Generate! =-</button>
     </form>
-    <br/> <br/> <hr/> <br/>
+    <br/> <hr/> <br/>
+
 
     <!-- Кнопка для удаления всех пользователей -->
     <form th:method="POST" th:action="@{/authenticated/admin/delete_all}">
-        <input type="submit" value="-= Delete all user =-"/>
+        <label for="delete_all_label">Удалить всех к черту: </label>
+        <input type="submit" id="delete_all_label" value="-= Delete all user =-"/>
     </form>
-    <br/> <br/> <hr/> <br/> <br/>
+    <br/> <hr/> <br/>
 
+    <h3>Информация о залогиненом в настоящий момент пользователе:</h3>
+    <br/>
     <form th:method="GET" th:action="@{/authenticated/admin/current_user}" accept-charset="UTF-8">
-        <input type="submit" value="-= Current user info =-" />
+        <label for="info_label">Кто Я ???: </label>
+        <input type="submit" id="info_label" value="-= Current user info =-" />
     </form>
     <br/> <br/>
 
     <!-- Кнопка разлогинивания -->
     <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
-        <input type="submit" value="-= LogOut =-" />
+        <label for="logout_label">Надоело все, пойду я...  </label>
+        <input type="submit" id="logout_label" value="-= LogOut =-" />
     </form>
-    <br/> <br/> <hr/> <br/> <br/>
+    <br/> <hr/> <br/>
+
+
+    <!-- Форма для регистрации тестовых данных -->
+    <h3>Только для Супер-админов!</h3>
+    <form action="#" th:action="@{/authenticated/superadmin/system-info}" method="GET">
+        <label>Инфа о твоем компе: </label>
+        <button type="submit">-= View information about the system :) =-</button>
+    </form>
+    <br/> <hr/> <br/>
     </body>
 </html>

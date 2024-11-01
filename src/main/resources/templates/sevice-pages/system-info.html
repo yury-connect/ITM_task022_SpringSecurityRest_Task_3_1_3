@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>System Information</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 40px;
+                color: #333;
+            }
+            h1 {
+                color: #2c3e50;
+            }
+            .section-title {
+                color: #2980b9;
+                font-size: 1.2em;
+                margin-top: 20px;
+            }
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            li {
+                background: #ecf0f1;
+                padding: 8px;
+                margin: 5px 0;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>System Information</h1>
+
+        <div class="section">
+            <div class="section-title">Basic System Information</div>
+            <ul>
+                <li th:each="info : ${systemInfo}" th:text="${info}"></li>
+            </ul>
+        </div>
+
+        <!-- Форма для возврата -->
+        <div style="text-align: left;">
+            <form th:method="GET" th:action="@{/authenticated/admin/all}" accept-charset="UTF-8">
+                <label>Для возврата тыкай сюда: </label>
+                <input type="submit" value="-= Return =-" />
+            </form>
+        </div>
+    </body>
+</html>

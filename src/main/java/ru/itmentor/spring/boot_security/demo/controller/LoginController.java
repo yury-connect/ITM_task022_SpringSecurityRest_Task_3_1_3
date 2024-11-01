@@ -10,7 +10,7 @@ import ru.itmentor.spring.boot_security.demo.service.RoleService;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
 
-import java.util.Set;
+import java.util.*;
 
 import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
 
@@ -40,8 +40,6 @@ public class LoginController extends AbstractController {
         User defaultUser = userUtilService.generateNewUsers(-1).get(0);
         defaultUser.setPassword(USER_PASSWORD_DEFAULT);
         model.addAttribute("created_user", defaultUser);
-
-//        model.addAttribute("all_existing_roles", roleService.findAllRoles());
 
         return "sevice-pages/registration_page";
     }

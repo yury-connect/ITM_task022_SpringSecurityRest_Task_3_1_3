@@ -5,23 +5,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD_PLACE_HOLDER;
 
 
 @Controller
 @RequestMapping(value = "/authenticated/guest")
 public class GuestController extends AbstractController{
 
+
     @Autowired
     protected GuestController(UserService userService) {
         super(userService);
     }
+
+
 
     @GetMapping()
     public String showGuestInfoPage(Model model) {

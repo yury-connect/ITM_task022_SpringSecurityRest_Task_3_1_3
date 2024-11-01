@@ -88,12 +88,4 @@ public class UserServiceImpl implements UserService {
                 user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.toString())).collect(Collectors.toSet())
         );
     }
-
-//    private Collection<GrantedAuthority> roleStringToGrantedAuthorities(Set<Role> roleSet) {
-//        Collection<GrantedAuthority> authorities =
-//                roleSet.stream()
-//                        .map(str -> new SimpleGrantedAuthority(str.toString()))
-//                        .collect(Collectors.toList());
-//        return authorities;
-//    }
 }

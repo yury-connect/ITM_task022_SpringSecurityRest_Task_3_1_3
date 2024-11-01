@@ -37,8 +37,6 @@ public class SecurityConfig {
             .authorizeRequests() // определяет, какие пользователи могут получить доступ к каким URL на основе их ролей и аутентификационного статуса.
                 .antMatchers("/css/**", "/public/**", "/login", "/loginURL", "/registrate").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
 
-//                .antMatchers("/authenticated/admin").permitAll() // УДАЛИТЬ
-
                 .antMatchers("/authenticated/**").authenticated() // если пойдем в сторону "/authenticated/**" то пустит только Аутентифицированных.
                 .antMatchers("/authenticated/user/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN") // на страницы пользователей пускаем только С РОЛЬЮ 'USER', 'ADMIN' и 'SUPERADMIN'
                 .antMatchers("/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // в админку пускаем только С РОЛЯМИ 'ADMIN' и 'SUPERADMIN'
@@ -47,8 +45,6 @@ public class SecurityConfig {
             .and()
                 .formLogin() // по умолчанию Spring сгенерит форму (как в нашем случае), ЛИБО для авторизации будет 'НАША красивая сверстанная форма'
 //                .formLogin(login -> login.loginPage("/loginURL")) //  для авторизации будет НАША красивая сверстанная форма
-
-
 
 
 //                .loginPage("sevice-pages/login_page") // Указывает Spring Security на кастомную страницу логина
@@ -71,7 +67,6 @@ public class SecurityConfig {
 //                .tokenValiditySeconds(86400)  // Срок действия в секундах (например, один день)
 //                .userDetailsService(userDetailsService()) // определяем UserDetailsService
 
-
                 .and()
                 .sessionManagement() // ограничение на количество активных сессий для одного пользователя или указать параметры сессий для повышения безопасности
                 .maximumSessions(3)
@@ -81,10 +76,7 @@ public class SecurityConfig {
 //                .and()
 //                .csrf()
 //                .ignoringAntMatchers("/css/**", "/public/**") // Исключить определенные URL из CSRF-защиты
-
-//                .csrf().disable(); // временно отключить CSRF-защиту
         ;
-
         http.csrf().disable(); // ЛИБО можно так - временно отключить CSRF-защиту
         return http.build();
 
@@ -100,7 +92,6 @@ public class SecurityConfig {
                             .password("user")
                             .roles("USER")
                             .build();
-
             return new InMemoryUserDetailsManager(user);
         }
     */
