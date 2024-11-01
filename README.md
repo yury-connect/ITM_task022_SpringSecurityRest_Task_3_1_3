@@ -87,14 +87,109 @@ _Spring Security_ базируется на 2х интерфейсах, кото
 
 ---
 
-Основные маршруты проекта:
+> Основные маршруты проекта:
+>
+> `http://localhost:8080/login` - залогиниться> 
+> `http://localhost:8080/logout` - разлогиниться
+>
+> `http://localhost:8080/authenticated/superadmin` - админка (для Супер-админов, доп. возможности)
+> `http://localhost:8080/authenticated/admin` - админка (работа с пользователями)
+> `http://localhost:8080/authenticated/user` - для пользователей (только просмотр себя)
+> `http://localhost:8080/authenticated/guest` - для гостей (только залогинивание и гостевая страница)
+> 
+> 
 
-`http://localhost:8080/login` - залогиниться
-`http://localhost:8080/logout` - разлогиниться
+---
 
-`http://localhost:8080/authenticated/admin` - админка
+### Структура проекта:
+```html
+ITM_task021_SpringSecurity_Task_3_1_2
+main
+├───java
+│   └───ru
+│       └───itmentor
+│           └───spring
+│               └───boot_security
+│                   └───demo
+│                       │   SpringBootSecurityDemoApplication.java
+│                       │
+│                       ├───configs
+│                       │       MvcConfig.java
+│                       │       PasswordEncoderConfig.java
+│                       │       SecurityConfig.java
+│                       │       SuccessUserHandler.java
+│                       │
+│                       ├───constants
+│                       │       Constants.java
+│                       │
+│                       ├───controller
+│                       │       AbstractController.java
+│                       │       AdminController.java
+│                       │       GuestController.java
+│                       │       HelloController.java
+│                       │       LoginController.java
+│                       │       SuperAdminController.java
+│                       │       UserController.java
+│                       │
+│                       ├───model
+│                       │       Role.java
+│                       │       User.java
+│                       │
+│                       ├───repository
+│                       │       RoleRepository.java
+│                       │       UserRepository.java
+│                       │
+│                       ├───service
+│                       │       RoleService.java
+│                       │       RoleServiceImpl.java
+│                       │       UserService.java
+│                       │       UserServiceImpl.java
+│                       │       UserUtilService.java
+│                       │       UserUtilServiceImpl.java
+│                       │
+│                       └───util
+│                               DatabaseInitializer.java
+│                               UserGenerator.java
+│
+└───resources
+│       application─mysql.properties
+│       application─postgresql.properties
+│       application.properties
+│
+├───SQLs
+│       sql_examples.sql
+│       SQL_PostgreSQL_scrypt_1_delete_tables.sql
+│       SQL_PostgreSQL_scrypt_2_create_tebles.sql
+│       SQL_PostgreSQL_scrypt_3_add_users.sql
+│       SQL_PostgreSQL_scrypt_FULL.sql
+│
+├───static
+│   └───css
+│           styles.css
+│
+└───templates
+    ├───admin─pages
+    │       all_users.html
+    │       create_user_page.html
+    │       delete_user_page.html
+    │       update_user_page.html
+    │       view_user_page.html
+    │
+    ├───guest─pages
+    │       guest_info_page.html
+    │
+    ├───sevice─pages
+    │       greating_page.html
+    │       login_page.html
+    │       registration_page.html
+    │       system─info.html
+    │
+    └───users_pages
+            user_info_page.html
 
-`http://localhost:8080/authenticated/user` - для пользователей
+```
+
+---
 
 
 
