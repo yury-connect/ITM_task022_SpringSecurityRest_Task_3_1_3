@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>All users</title>
+    </head>
+
+    <body>
+    <h1>All users:</h1>
+    <table border="3">
+        <tr>
+            <th style="width: 8%; background-color: lightcyan;">Id</th>
+            <th style="width: 20%; background-color: lightcyan;">User name</th>
+            <th style="width: 32%; background-color: lightcyan;">Full name</th>
+            <th style="width: 10%; background-color: lightcyan;">Date birth</th>
+            <th style="width: 10%; background-color: lightcyan;">View</th>
+            <th style="width: 10%; background-color: lightcyan;">Edit</th>
+            <th style="width: 10%; background-color: lightcyan;">Delete</th>
+        </tr>
+
+        <tr th:each="user : ${all_existing_users}">
+            <td style="text-align: center;" th:text="${user.getId()}">id</td>
+            <td style="text-align: left;" th:text="${user.getUserName()}">UserName</td>
+            <td style="text-align: left;" th:text="${user.getFullName()}">FullName</td>
+            <td style="text-align: center;" th:text="${user.getDateBirth()}">DateBirth</td>
+
+            <!-- Кнопка просмотра пользователя -->
+            <td style="text-align: center;">
+                <form method="GET" th:action="@{/authenticated/admin/view}">
+                    <input type="hidden" name="id_viewed_user" th:value="${user.getId()}" />
+                    <button type="submit"><em><b>View</b></em></button>
+                </form>
+            </td>
+
+            <!-- Кнопка редактирования пользователя -->
+            <td style="text-align: center;">
+                <form method="GET" th:action="@{/authenticated/admin/edit}">
+                    <input type="hidden" name="id_edited_user" th:value="${user.getId()}" />
+                    <button type="submit"><em><b>Edit</b></em></button>
+                </form>
+            </td>
+
+            <!-- Кнопка удаления пользователя (через POST-запрос) -->
+            <td style="text-align: center;">
+                <form method="POST" th:action="@{/authenticated/admin/delete}">
+                    <input type="hidden" name="id_removed_user" th:value="${user.getId()}" />
+                    <button type="submit"><em><b>Delete</b></em></button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <br/> <br/> <hr/>
+
+    <!-- Кнопка добавления нового пользователя -->
+    <h3>Добавление нового пользователя</h3>
+    <form th:method="GET" th:action="@{/authenticated/admin/create}">
+        <label for="add_label">Создать нового пользователя (вручную): </label>
+        <input type="submit" id="add_label" value="-= Add a new user =-"/>
+    </form>
+    <br/> <br/> <hr/>
+
+    <!-- Форма для генерации тестовых данных -->
+    <h3>Generating test user data for tables</h3>
+    <form action="#" th:action="@{/authenticated/admin/generate}" method="GET">
+        <label for="count_label">Enter the number of new users generated: </label>
+        <input type="number" id="count_label" name="count_generated_users" th:value="3" size="8" maxlength="6" required>
+        <button type="submit">-= Generate! =-</button>
+    </form>
+    <br/> <br/> <hr/>
+
+
+    <!-- Кнопка для удаления всех пользователей -->
+    <h3>Полное удаление всех существующих пользователей // очистка базы</h3>
+    <form th:method="POST" th:action="@{/authenticated/admin/delete_all}">
+        <label for="delete_all_label">Удалить всех к черту: </label>
+        <input type="submit" id="delete_all_label" value="-= Delete all users =-"/>
+    </form>
+    <br/> <br/> <hr/>
+
+    <h3>Информация о залогиненом в настоящий момент пользователе:</h3>
+    <form th:method="GET" th:action="@{/authenticated/admin/current_user}" accept-charset="UTF-8">
+        <label for="info_label">Посмотреть под кем я залогинился // КТО Я? </label>
+        <input type="submit" id="info_label" value="-= Current user info =-" />
+    </form>
+    <br/>
+
+    <!-- Кнопка разлогинивания -->
+    <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
+        <label for="logout_label">Надоело все, устал я от вас, пойду я...  </label>
+        <input type="submit" id="logout_label" value="-= LogOut =-" />
+    </form>
+    <br/> <br/> <hr/>
+
+    <!-- Форма для регистрации тестовых данных -->
+    <h3>Информация <u>Только для Супер-админов!</u> <i>(ROLE_SUPERADMIN)</i></h3>
+    <form action="#" th:action="@{/authenticated/superadmin/system-info}" method="GET">
+        <label>Инфа о твоем компе: </label>
+        <button type="submit">-= View information about the system :) =-</button>
+    </form>
+    <br/> <br/> <hr/> <br/>
+    </body>
+</html>

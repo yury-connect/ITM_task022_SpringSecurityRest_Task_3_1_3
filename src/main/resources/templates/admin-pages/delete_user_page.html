@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Delete user page</title>
+    </head>
+
+    <body>
+        <h1>Delete user:</h1>
+
+        <table border="5">
+            <tr>
+                <td style = "width: 200px; background-color: lightcyan; text-align: center;">Parameter</td>
+                <td style = "width: 500px; background-color: lightcyan; text-align: center;">Value</td>
+            </tr>
+            <tr>
+                <td style = "background-color: aqua;"></td>
+                <td style = "background-color: aqua; text-align: center;">User info:</td>
+            </tr>
+            <tr>
+                <td>User Id</td>
+                <td th:text="${removed_user.getId()}">User Id</td>
+            </tr>
+            <tr>
+                <td>User name // Login</td>
+                <td th:text="${removed_user.getUserName()}">User name</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td th:text="${removed_user.getPassword()}">Password</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td th:text="${removed_user.getEmail()}">Email</td>
+            </tr>
+
+            <tr>
+                <td style = "background-color: aqua;"></td>
+                <td style = "background-color: aqua; text-align: center;">Personal info:</td>
+            </tr>
+            <tr>
+                <td>Full name</td>
+                <td th:text="${removed_user.getFullName()}">Full name</td>
+            </tr>
+            <tr>
+                <td>Date of Birth</td>
+                <td th:text="${removed_user.getDateBirth()}">Date of Birth</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td th:text="${removed_user.getAddress()}">Address</td>
+            </tr>
+        </table>
+        <br/> <br/> <br/>
+
+        <h2>Do you really want to delete this user?</h2>
+        <br/> <br/>
+
+        <table border="0">
+            <tr>
+                <td style = "width: 200px; text-align: center;">
+                    <form method="POST" th:action="@{/authenticated/admin/delete}">
+                        <input type="hidden" name="id_removed_user" th:value="${removed_user.getId()}" />
+                        <input type="hidden" name="_method" value="DELETE"/>
+                        <input type="submit" value="-= Confirm DELETION =-"/>
+                    </form>
+                </td>
+                <td style = "width: 200px; text-align: center;">
+                    <form th:method="GET" th:action="@{/authenticated/admin/all}" accept-charset="UTF-8">
+                        <input type="submit" value="-= Cancel =-"/>
+                    </form>
+                </td>
+            </tr>
+        </table>
+        <br/> <br/> <hr/> <br/> <br/>
+
+        <!-- Кнопка разлогинивания -->
+        <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
+            <input type="submit" value="-= LogOut =-" />
+        </form>
+        <br/> <br/> <hr/> <br/> <br/>
+    </body>
+</html>

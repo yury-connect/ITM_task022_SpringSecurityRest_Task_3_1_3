@@ -84,3 +84,17 @@ _Spring Security_ базируется на 2х интерфейсах, кото
 [Ссылка на оригинальную репозиторий](https://github.com/VanderDT/Task-7.git)
 
 [Ссылка на данную страницу](https://github.com/yury-connect/ITM_task021_SpringSecurity_Task_3_1_2.git)
+
+---
+
+Основные маршруты проекта:
+
+`http://localhost:8080/login` - залогиниться
+`http://localhost:8080/logout` - разлогиниться
+
+`http://localhost:8080/authenticated/admin` - админка
+
+`http://localhost:8080/authenticated/user` - для пользователей
+
+
+

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Greeting page</title>
+        <style>
+            /* Стили для огромной кнопки */
+            .big-button {
+                font-size: 40px;   /* Размер текста кнопки */
+                padding: 20px 40px; /* Внутренние отступы для увеличения размера кнопки */
+                border-radius: 10px; /* Скругленные углы кнопки */
+                background-color: #4CAF50; /* Цвет фона кнопки */
+                color: white; /* Цвет текста на кнопке */
+                border: none; /* Убираем границы */
+                cursor: pointer; /* Указатель мыши */
+            }
+
+            .big-button:hover {
+                background-color: #45a049; /* Цвет фона при наведении */
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Greeting page</h1>
+        <br/>
+
+        <div>
+            <!-- Вывод заголовка H1 -->
+            <h1 th:text="${h1_message}">Text: Task number and theme</h1>
+
+            <!-- Вывод заголовка H2 -->
+            <h2 th:text="${h2_message}">Text: message</h2>
+            <br/> <hr/> <br/>
+
+            <div style="width: 100%; text-align: center;">
+<!--                <form th:method="GET" th:action="@{/authenticated/admin}">-->
+<!--                    <input type="submit" value="-= GO =-" class="big-button"/>-->
+<!--                </form>-->
+
+<!--                <a href="/login" class="big-button">-= GO =-</a>-->
+                <a href="/loginURL" class="big-button">-= GO =-</a>
+            </div>
+            <br/> <br/> <hr/> <br/> <br/>
+
+            <!-- Вывод заголовка H5 -->
+            <h5 th:text="${h5_message}">Text: Author</h5>
+            <br/> <br/>
+        </div>
+    </body>
+</html>
