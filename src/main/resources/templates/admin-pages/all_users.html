@@ -49,13 +49,15 @@
             </td>
         </tr>
     </table>
-    <br/> <hr/> <br/>
+    <br/> <br/> <hr/>
 
     <!-- Кнопка добавления нового пользователя -->
+    <h3>Добавление нового пользователя</h3>
     <form th:method="GET" th:action="@{/authenticated/admin/create}">
-        <input type="submit" value="-= Add a new user =-"/>
+        <label for="add_label">Создать нового пользователя (вручную): </label>
+        <input type="submit" id="add_label" value="-= Add a new user =-"/>
     </form>
-    <br/> <hr/> <br/>
+    <br/> <br/> <hr/>
 
     <!-- Форма для генерации тестовых данных -->
     <h3>Generating test user data for tables</h3>
@@ -64,38 +66,37 @@
         <input type="number" id="count_label" name="count_generated_users" th:value="3" size="8" maxlength="6" required>
         <button type="submit">-= Generate! =-</button>
     </form>
-    <br/> <hr/> <br/>
+    <br/> <br/> <hr/>
 
 
     <!-- Кнопка для удаления всех пользователей -->
+    <h3>Полное удаление всех существующих пользователей // очистка базы</h3>
     <form th:method="POST" th:action="@{/authenticated/admin/delete_all}">
         <label for="delete_all_label">Удалить всех к черту: </label>
-        <input type="submit" id="delete_all_label" value="-= Delete all user =-"/>
+        <input type="submit" id="delete_all_label" value="-= Delete all users =-"/>
     </form>
-    <br/> <hr/> <br/>
+    <br/> <br/> <hr/>
 
     <h3>Информация о залогиненом в настоящий момент пользователе:</h3>
-    <br/>
     <form th:method="GET" th:action="@{/authenticated/admin/current_user}" accept-charset="UTF-8">
-        <label for="info_label">Кто Я ???: </label>
+        <label for="info_label">Посмотреть под кем я залогинился // КТО Я? </label>
         <input type="submit" id="info_label" value="-= Current user info =-" />
     </form>
-    <br/> <br/>
+    <br/>
 
     <!-- Кнопка разлогинивания -->
     <form th:method="GET" th:action="@{/logout}" accept-charset="UTF-8">
-        <label for="logout_label">Надоело все, пойду я...  </label>
+        <label for="logout_label">Надоело все, устал я от вас, пойду я...  </label>
         <input type="submit" id="logout_label" value="-= LogOut =-" />
     </form>
-    <br/> <hr/> <br/>
-
+    <br/> <br/> <hr/>
 
     <!-- Форма для регистрации тестовых данных -->
-    <h3>Только для Супер-админов!</h3>
+    <h3>Информация <u>Только для Супер-админов!</u> <i>(ROLE_SUPERADMIN)</i></h3>
     <form action="#" th:action="@{/authenticated/superadmin/system-info}" method="GET">
         <label>Инфа о твоем компе: </label>
         <button type="submit">-= View information about the system :) =-</button>
     </form>
-    <br/> <hr/> <br/>
+    <br/> <br/> <hr/> <br/>
     </body>
 </html>

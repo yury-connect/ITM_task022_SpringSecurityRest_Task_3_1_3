@@ -34,12 +34,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+//        В SecurityConfig роли должны быть указаны без префикса ROLE_ в методах hasRole и hasAnyRole. Spring Security автоматически добавляет префикс ROLE_ для ролей, поэтому при указании hasAnyRole("ADMIN", "SUPERADMIN") Spring будет проверять наличие ролей ROLE_ADMIN и ROLE_SUPERADMIN.
             .authorizeRequests() // определяет, какие пользователи могут получить доступ к каким URL на основе их ролей и аутентификационного статуса.
-                .antMatchers("/css/**", "/public/**", "/login", "/loginURL", "/registrate").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
+                .antMatchers("/css/**", "/public/**",  "/loginURL", "/registrate").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
 
-                .antMatchers("/authenticated/**").authenticated() // если пойдем в сторону "/authenticated/**" то пустит только Аутентифицированных.
                 .antMatchers("/authenticated/user/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN") // на страницы пользователей пускаем только С РОЛЬЮ 'USER', 'ADMIN' и 'SUPERADMIN'
                 .antMatchers("/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // в админку пускаем только С РОЛЯМИ 'ADMIN' и 'SUPERADMIN'
+                .antMatchers("/authenticated/superadmin/**").hasAnyRole("SUPERADMIN") // в СУПЕР админку пускаем только С РОЛЯМИ 'SUPERADMIN'
                 .anyRequest().authenticated() // любой другой запрос требует аутентификации. Если запрос не подпадает под вышеперечисленные условия, пользователю все равно нужно будет пройти аутентификацию.
 
             .and()
