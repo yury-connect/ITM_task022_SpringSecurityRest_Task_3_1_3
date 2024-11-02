@@ -1,4 +1,4 @@
-package ru.itmentor.spring.boot_security.demo.controller;
+package ru.itmentor.spring.boot_security.demo.controller.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
