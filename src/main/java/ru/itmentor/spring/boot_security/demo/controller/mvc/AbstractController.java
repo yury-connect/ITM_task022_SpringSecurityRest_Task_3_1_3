@@ -1,4 +1,4 @@
-package ru.itmentor.spring.boot_security.demo.controller.web;
+package ru.itmentor.spring.boot_security.demo.controller.mvc;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

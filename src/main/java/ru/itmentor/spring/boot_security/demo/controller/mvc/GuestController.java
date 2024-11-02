@@ -1,4 +1,4 @@
-package ru.itmentor.spring.boot_security.demo.controller.web;
+package ru.itmentor.spring.boot_security.demo.controller.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
