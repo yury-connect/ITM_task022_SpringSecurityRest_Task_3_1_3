@@ -12,6 +12,6 @@ public interface UserUtilService {
 
     List<User> generateNewUsers(int count);
 
-    void generateTestData(int count);
+    List<User> generateTestData(int count);
 
 }

@@ -14,4 +14,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {  // 1й �
 
     @Query("SELECT u FROM User u WHERE u.email = ?1")
     Optional<User> findByEmail(String email);
+
 }
+
+    /*
+    интересный вариант с ленивой инициализацией сущностей, ниже ссылка на источник:
+    https://github.com/AlexKudryashov1/Task-7/blob/Task-3.1.3x/src/main/java/ru/itmentor/spring/boot_security/demo/repositories/UserRepositories.java
+
+    @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.username = :username")
+    User findByUsernameAndFetchLazyRelationEagerly(@Param("username") String username);
+     */

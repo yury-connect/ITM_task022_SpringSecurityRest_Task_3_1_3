@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD_PLACE_HOLDER;
 import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
 
 
@@ -79,10 +80,13 @@ public class UserUtilServiceImpl implements UserUtilService{
     Если count == null то будет записан один пользоватьель с данными по умолчанию
      */
     @Override
-    public void generateTestData(int count) {
-        generateNewUsers(count)
+    public List<User> generateTestData(int count) {
+        List<User> userList = generateNewUsers(count)
                 .stream()
                 .peek(user -> user.setPassword(passwordEncoder.encode(user.getPassword())))
-                .forEach(userRepository::save);
+                .peek(userRepository::save)
+                .peek(user -> user.setPassword(PASSWORD_PLACE_HOLDER))
+                .collect(Collectors.toList());
+        return userList;
     }
 }

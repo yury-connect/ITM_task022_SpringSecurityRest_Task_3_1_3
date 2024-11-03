@@ -1,80 +1,120 @@
 package ru.itmentor.spring.boot_security.demo.controller.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itmentor.spring.boot_security.demo.controller.web.AbstractController;
+import ru.itmentor.spring.boot_security.demo.controller.mvc.AbstractController;
+import ru.itmentor.spring.boot_security.demo.model.AuthRequest;
+import ru.itmentor.spring.boot_security.demo.model.AuthResponse;
 import ru.itmentor.spring.boot_security.demo.model.User;
-import ru.itmentor.spring.boot_security.demo.service.RoleService;
-import ru.itmentor.spring.boot_security.demo.service.UserService;
-import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
+import ru.itmentor.spring.boot_security.demo.service.*;
+import ru.itmentor.spring.boot_security.demo.util.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD_PLACE_HOLDER;
 import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
 
 
-@Controller
-@RequestMapping(value = "/authenticated/admin")
+// Перевод MVC-приложения на Spring Boot в RESTful API.
+@RestController
+@RequestMapping(value = "/api/authenticated/admin")
 public class RestAdminController extends AbstractController {
 
     private UserUtilService userUtilService;
     private RoleService roleService;
-
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
 
     @Autowired
-    public RestAdminController(UserService service, UserUtilService userUtilService, RoleService roleService) {
+    public RestAdminController(UserService service,
+                               UserUtilService userUtilService,
+                               RoleService roleService,
+                               AuthenticationManager authenticationManager,
+                               JwtUtil jwtUtil) {
         super(service); //  прокидываю UserService в общий суперкласс
         this.userUtilService = userUtilService;
         this.roleService = roleService;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+    }
+
+
+    @Operation(summary = "Получение токена (POST)")
+    @PostMapping("/authenticate")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+        System.out.println("\n\n\t" + authRequest.getUserName() + "\n\n");
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверные учетные данные");
+        }
+
+        final UserDetails userDetails = userService.loadUserByUsername(authRequest.getUserName());
+        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+
+        return ResponseEntity.ok(new AuthResponse(jwt));
     }
 
 
 
-    // Перенаправление на список всех пользователей (GET)
+    @Operation(summary = "Перенаправление на список всех пользователей (GET)")
     @GetMapping()
     public String root() { // В этом случае - перенаправлю на страничку по умолчанию
-        return "redirect:/authenticated/admin/all";
+        return "redirect:/authenticated/admin/all_users";
     }
 
-    // Генерация тестовых пользователей (GET)
-    @GetMapping("/generate")
-    public String generateUsers(@RequestParam(name = "count_generated_users", required = false, defaultValue = "0") Integer count) {
+    // ПЕРЕПИСАТЬ, тут должно пол логике возвращать созданных пользователей
+    @Operation(summary = "Генерация тестовых пользователей (POST)")
+    @PostMapping("/generate_users")
+    public ResponseEntity<Integer> generateUsers(@RequestParam(name = "count_generated_users", required = false, defaultValue = "0") Integer count) {
         userUtilService.generateTestData(count);
-        return "redirect:/authenticated/admin/all";
+        return ResponseEntity.ok(count);
     }
 
-    // Отображение страницы создания пользователя (GET)
-    @GetMapping("/create")
-    public String showCreateUsersPage(Model model) {
-        User defaultUser = userUtilService.generateNewUsers(-1).get(0);
-        defaultUser.setPassword(USER_PASSWORD_DEFAULT);
-        model.addAttribute("created_user", defaultUser);
 
-        model.addAttribute("all_existing_roles", roleService.findAllRoles());
-
-        return "admin-pages/create_user_page";
+    @Operation(summary = "Создание нового пользователя (POST)")
+    @PostMapping("/create_user")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.ok(createdUser);
     }
 
-    // Создание нового пользователя (POST)
-    @PostMapping("/create")
-    public String createUser(@ModelAttribute("created_user") User user) {
-        userService.createUser(user);
-        return "redirect:/authenticated/admin/all";
+    @Operation(summary = "Создание списка новых пользователей (POST)")
+    @PostMapping("/create_any_users")
+    public ResponseEntity<List<User>> createUsers(@RequestBody List<User> users) {
+        List<User> createdUsers = new ArrayList<>();
+//        List<User> createdUsers = Stream.generate(() -> generateUser(allExistingRoles));
+
+        users.forEach(user -> createdUsers.add(userService.createUser(user)));
+        return ResponseEntity.ok(createdUsers);
     }
 
 
 
     // Отображение всех пользователей (GET)
-    @GetMapping("/all")
-    public String showAllUsersPage(Model model) {
-        model.addAttribute("all_existing_users", userService.findAllUsers());
-        return "admin-pages/all_users";
+    @Operation(summary = "Получение всех пользователей (GET)")
+    @GetMapping("/all_users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.findAllUsers();
+        return ResponseEntity.ok(users);
     }
+
+
+
+
 
 
 
@@ -142,3 +182,9 @@ public class RestAdminController extends AbstractController {
         return "users_pages/user_info_page";
     }
 }
+
+/*
+В REST API принято использовать "snake-case" (нижний регистр с подчеркиваниями) для URL-адресов.
+    Это обеспечивает лучшую читаемость и является более распространенной практикой в REST API.
+
+ */
