@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.controller.mvc.AbstractController;
+import ru.itmentor.spring.boot_security.demo.dto.UserDTO;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.*;
+import ru.itmentor.spring.boot_security.demo.util.DtoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +23,16 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD
 public class RestAdminController extends AbstractController {
 
     private UserUtilService userUtilService;
+    private DtoUtils dtoUtils;
 
 
     @Autowired
     public RestAdminController(UserService service,
-                               UserUtilService userUtilService) {
+                               UserUtilService userUtilService,
+                               DtoUtils dtoUtils) {
         super(service); //  прокидываю UserService в общий суперкласс
         this.userUtilService = userUtilService;
+        this.dtoUtils = dtoUtils;
     }
 
 
@@ -35,7 +40,7 @@ public class RestAdminController extends AbstractController {
 
     @Operation(summary = "Перенаправление на список всех пользователей (GET)")
     @GetMapping()
-    public ResponseEntity<List<User>> root() { // В этом случае - перенаправлю на страничку по умолчанию
+    public ResponseEntity<List<UserDTO>> root() { // В этом случае - перенаправлю на страничку по умолчанию
         System.out.println();
         return getAllUsers();
     }
@@ -43,42 +48,47 @@ public class RestAdminController extends AbstractController {
     // ПЕРЕПИСАТЬ, тут должно пол логике возвращать созданных пользователей
     @Operation(summary = "Генерация тестовых пользователей (POST)")
     @GetMapping("/generate_users")
-    public ResponseEntity<List<User>> generateUsers(@RequestParam(name = "count_generated_users", required = false, defaultValue = "0") Integer count) {
-        List<User> generatedUsers = userUtilService.generateTestData(count)
+    public ResponseEntity<List<UserDTO>> generateUsers(@RequestParam(name = "count_generated_users", required = false, defaultValue = "0") Integer count) {
+        List<UserDTO> generatedUsersDTO = userUtilService.generateTestData(count)
                 .stream()
-                .peek(user -> user.setPassword(PASSWORD_PLACE_HOLDER))
+                .map(usr -> dtoUtils.convertToUserDto(usr))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(generatedUsers);
+        return ResponseEntity.ok(generatedUsersDTO);
     }
 
 
     @Operation(summary = "Создание нового пользователя (POST)")
     @PostMapping("/create_user")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.ok(createdUser);
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto) {
+        User createdUser = userService.createUser(dtoUtils.convertToUser(dto));
+        return ResponseEntity.ok(dtoUtils.convertToUserDto(createdUser));
     }
 
     @Operation(summary = "Создание списка новых пользователей (POST)")
     @PostMapping("/create_any_users")
-    public ResponseEntity<List<User>> createUsers(@RequestBody List<User> users) {
+    public ResponseEntity<List<UserDTO>> createUsers(@RequestBody List<UserDTO> users) {
         List<User> createdUsers = new ArrayList<>();
-//        List<User> createdUsers = Stream.generate(() -> generateUser(allExistingRoles));
-
-        users.forEach(user -> createdUsers.add(userService.createUser(user)));
-        return ResponseEntity.ok(createdUsers);
+        users.forEach(user -> createdUsers.add(userService.createUser(dtoUtils.convertToUser(user))));
+        return ResponseEntity.ok(createdUsers.stream()
+                .map(dtoUtils::convertToUserDto)
+                .collect(Collectors.toList()));
     }
 
 
 
     // Отображение всех пользователей (GET)
-    @Operation(summary = "Получение всех пользователей (GET)")
-    @GetMapping("/all_users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        System.out.println("URL: /api/authenticated/admin/all_users" + "\tMethod: getAllUsers()");
-        List<User> users = userService.findAllUsers();
-        return ResponseEntity.ok(users);
-    }
+        @Operation(summary = "Получение всех пользователей (GET)")
+        @GetMapping("/all_users")
+        public ResponseEntity<List<UserDTO>> getAllUsers() {
+
+            System.out.println("URL: /api/authenticated/admin/all_users" + "\tMethod: getAllUsers()");
+
+            List<UserDTO> dtoList = userService.findAllUsers().stream()
+                    .map(dtoUtils::convertToUserDto)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(dtoList);
+        }
 
 
 
@@ -88,11 +98,11 @@ public class RestAdminController extends AbstractController {
 
     @Operation(summary = "Просмотр информации о конкретном пользователе (GET)")
     @GetMapping("/view_user")
-    public ResponseEntity<User> showUser(@RequestParam("id_viewed_user") Integer id) {
-        User viewedUser = userService.findUserById(id);
+    public ResponseEntity<UserDTO> showUser(@RequestParam("id_viewed_user") Integer id) {
+        UserDTO viewedUser = dtoUtils.convertToUserDto(userService.findUserById(id));
         viewedUser.setPassword(PASSWORD_PLACE_HOLDER);
 
-        System.out.println("URL: /api/authenticated/admin/view" + "\tMethod: showUser()\nviewedUser = \t " + viewedUser);
+        System.out.println("URL: /api/authenticated/admin/view" + "\tMethod: showUser()\nUserDTO = \t " + viewedUser);
 
         return ResponseEntity.ok(viewedUser);
     }
@@ -101,9 +111,14 @@ public class RestAdminController extends AbstractController {
 
     @Operation(summary = "Обновление данных пользователя (POST с имитацией PUT)")
     @PostMapping("/edit")
-    public ResponseEntity<User> editUser(@RequestBody User user) {
-        System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()\n\tedited_user = \t " + user + "\n");
-        User updatedUser = userService.updateUser(user);
+    public ResponseEntity<User> editUser(@RequestBody UserDTO dto) {
+
+        System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()\n\tUserDTO = \t " + dto + "\n");
+
+        User updatedUser = userService.updateUser(dtoUtils.convertToUser(dto));
+
+        System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()\n\tUser = \t " + updatedUser + "\n");
+
         return ResponseEntity.ok(updatedUser);
     }
 
@@ -112,32 +127,29 @@ public class RestAdminController extends AbstractController {
 
     @Operation(summary = "Удаление пользователя (POST с имитацией DELETE)")
     @PostMapping("/delete")
-    public ResponseEntity<User> deleteOneUser(@RequestParam(name = "id_removed_user") Integer id) {
-        User deletedUser = userService.deleteUserById(id);
-        deletedUser.setPassword(PASSWORD_PLACE_HOLDER);
+    public ResponseEntity<UserDTO> deleteOneUser(@RequestParam(name = "id_removed_user") Integer id) {
+        UserDTO deletedUser = dtoUtils.convertToUserDto(userService.deleteUserById(id));
         return ResponseEntity.ok(deletedUser);
-//        return ResponseEntity.noContent().build(); // Возвращаем статус 204 No Content
     }
 
     @Operation(summary = "Удаление всех пользователей (POST с имитацией DELETE)")
     @PostMapping("/delete_all")
-    public ResponseEntity<List<User>> deleteAllUsers() {
-        List<User> deleteUsersList = new ArrayList<>(userService.findAllUsers());
-        deleteUsersList.forEach(usr -> {
-            userService.deleteUserById(usr.getId());
-            usr.setPassword(PASSWORD_PLACE_HOLDER);
-        });
-        return ResponseEntity.ok(deleteUsersList);
+    public ResponseEntity<List<UserDTO>> deleteAllUsers() {
+        List<UserDTO> deletedUsersList = userService.findAllUsers().stream() // Получаем список всех пользователей
+                .map(dtoUtils::convertToUserDto) // Сначала конвертируем в DTO
+                .collect(Collectors.toList());
+        deletedUsersList.forEach(dto -> userService.deleteUserById(dto.getId())); // Удаляем всех пользователей по списку ID
+        return ResponseEntity.ok(deletedUsersList);
     }
 
 
 
     @Operation(summary = "Просмотр информации о залогиненном пользователе (GET)")
     @GetMapping("/current_user")
-    public ResponseEntity<User> showCurrentUser() {
+    public ResponseEntity<UserDTO> showCurrentUser() {
         User currentUser = getCurrentUser(); // получаю (GET) залогиненного пользователя из общего суперкласса
         currentUser.setPassword(PASSWORD_PLACE_HOLDER);
-        return ResponseEntity.ok(currentUser);
+        return ResponseEntity.ok(dtoUtils.convertToUserDto(currentUser));
     }
 }
 
