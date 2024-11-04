@@ -130,6 +130,99 @@
 			"name": "Task 3.1.3",
 			"item": [
 				{
+					"name": "deprecated 2024-10-03",
+					"item": [
+						{
+							"name": "Authenticate Copy",
+							"request": {
+								"method": "POST",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "generate Users Copy",
+							"request": {
+								"method": "POST",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "create User Copy",
+							"request": {
+								"method": "POST",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "create Users Copy",
+							"request": {
+								"method": "POST",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "get All Users Copy",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "get User Copy",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "update User Copy",
+							"request": {
+								"method": "POST",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "delete User Copy",
+							"request": {
+								"method": "POST",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "delete Users Copy",
+							"request": {
+								"method": "POST",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "view current User Copy",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "logout Copy",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Authenticate",
 					"event": [
 						{
@@ -209,7 +302,7 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "count_generated_users",
+									"key": "count",
 									"value": "2",
 									"type": "text"
 								}
@@ -357,6 +450,66 @@
 							}
 						],
 						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{admin_url}}/user/10",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"user",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get User (Enveroment)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Получаем текущее значение переменной окружения\r",
+									"let currentId = pm.environment.get(\"_get_userId\");\r",
+									"\r",
+									"// Проверяем, если значение существует, инкрементируем его, если нет - устанавливаем в 1\r",
+									"if (currentId) {\r",
+									"    pm.environment.set(\"_get_userId\", parseInt(currentId) + 1);\r",
+									"} else {\r",
+									"    pm.environment.set(\"_get_userId\", 1); // начальное значение\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
 							"mode": "formdata",
 							"formdata": [
 								{
@@ -367,12 +520,13 @@
 							]
 						},
 						"url": {
-							"raw": "{{admin_url}}/view_user",
+							"raw": "{{admin_url}}/user/{{_get_userId}}",
 							"host": [
 								"{{admin_url}}"
 							],
 							"path": [
-								"view_user"
+								"user",
+								"{{_get_userId}}"
 							]
 						}
 					},
@@ -381,7 +535,7 @@
 				{
 					"name": "update User",
 					"request": {
-						"method": "POST",
+						"method": "PUT",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -399,12 +553,13 @@
 							"raw": "{\r\n    \"id\": 11,\r\n    \"userName\": \"valeriy2.kiselev2\",\r\n    \"password\": \"1234\",\r\n    \"email\": \"valeriy.kiselev@gmail.com2\",\r\n    \"fullName\": \"Киселев3 Валерий3\",\r\n    \"dateBirth\": \"2011-06-22\",\r\n    \"address\": \"776207 Россия, Саратов, ул. Куйбышева, 297 кв. 024\",\r\n    \"roles\": [\r\n        \"ROLE_USER\",\r\n        \"ROLE_SUPERADMIN\",\r\n        \"ROLE_GUEST\",\r\n        \"ROLE_ADMIN\"\r\n    ]\r\n}"
 						},
 						"url": {
-							"raw": "{{admin_url}}/edit",
+							"raw": "{{admin_url}}/user/8",
 							"host": [
 								"{{admin_url}}"
 							],
 							"path": [
-								"edit"
+								"user",
+								"8"
 							]
 						}
 					},
@@ -416,7 +571,7 @@
 						"auth": {
 							"type": "noauth"
 						},
-						"method": "POST",
+						"method": "DELETE",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -440,12 +595,76 @@
 							]
 						},
 						"url": {
-							"raw": "{{admin_url}}/delete",
+							"raw": "{{admin_url}}/user/12",
 							"host": [
 								"{{admin_url}}"
 							],
 							"path": [
-								"delete"
+								"user",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete User  (Enveroment)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Получаем текущее значение переменной окружения\r",
+									"let currentId = pm.environment.get(\"_delete_userId\");\r",
+									"\r",
+									"// Проверяем, если значение существует, инкрементируем его, если нет - устанавливаем в 1\r",
+									"if (currentId) {\r",
+									"    pm.environment.set(\"_delete_userId\", parseInt(currentId) + 1);\r",
+									"} else {\r",
+									"    pm.environment.set(\"_delete_userId\", 7); // начальное значение\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id_removed_user",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin_url}}/user/{{_delete_userId}}",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"user",
+								"{{_delete_userId}}"
 							]
 						}
 					},
@@ -457,7 +676,7 @@
 						"auth": {
 							"type": "noauth"
 						},
-						"method": "POST",
+						"method": "DELETE",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -480,12 +699,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{admin_url}}/delete_all",
+							"raw": "{{admin_url}}/all_users",
 							"host": [
 								"{{admin_url}}"
 							],
 							"path": [
-								"delete_all"
+								"all_users"
 							]
 						}
 					},
