@@ -1,0 +1,565 @@
+{
+	"info": {
+		"_postman_id": "0849ceeb-6b4d-46f8-95f1-efbcfe349074",
+		"name": "IT-Mentor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8967691",
+		"_collection_link": "https://lunar-equinox-676595.postman.co/workspace/New-Team-Workspace~8f191f88-e8ec-40af-b710-248189b66b12/collection/8967691-0849ceeb-6b4d-46f8-95f1-efbcfe349074?action=share&source=collection_link&creator=8967691"
+	},
+	"item": [
+		{
+			"name": "Task 2.3.1",
+			"item": [
+				{
+					"name": "generateUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8088/users/generate?count_generated_users=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"users",
+								"generate"
+							],
+							"query": [
+								{
+									"key": "count_generated_users",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "showAllPage",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8088/users/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8088",
+							"path": [
+								"users",
+								"all"
+							],
+							"query": [
+								{
+									"key": "count_generated_users",
+									"value": "3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tast 3.1.2",
+			"item": [
+				{
+					"name": "authenticated/user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authenticated/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticated",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "authenticated/admin/all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/authenticated/admin/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"authenticated",
+								"admin",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Spring SEQURITY"
+		},
+		{
+			"name": "Task 3.1.3",
+			"item": [
+				{
+					"name": "Authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const myData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set('token', myData.jwtToken)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userName\": \"superadmin\",\r\n    \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "generate Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "count_generated_users",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin_url}}/generate_users",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"generate_users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"id\": -2,\r\n        \"userName\": \"artaam.golubev\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"artem.golubev@yandex.ru\",\r\n        \"fullName\": \"Голубев Артём\",\r\n        \"dateBirth\": \"2002-03-02\",\r\n        \"address\": \"014833 Россия, Владивосток, Набережная пр., 291 кв. 049\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_GUEST\",\r\n            \"ROLE_ADMIN\"\r\n        ]\r\n    }"
+						},
+						"url": {
+							"raw": "{{admin_url}}/create_user",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"create_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    \r\n    {\r\n        \"id\": -212121,\r\n        \"userName\": \"arkadʹyevna.natalʹya1\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"arkadyevna.natalya@yandex.ru\",\r\n        \"fullName\": \"Наталья Аркадьевна Мухина\",\r\n        \"dateBirth\": \"2005-02-05\",\r\n        \"address\": \"681496 Россия, Тверь, площадь Почтовая, 188 кв. 008\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_SUPERADMIN\",\r\n            \"ROLE_GUEST\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": -2,\r\n        \"userName\": \"denisov.valentin\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"denisov.valentin@mail.ru\",\r\n        \"fullName\": \"Валентин Денисов\",\r\n        \"dateBirth\": \"1971-01-12\",\r\n        \"address\": \"314935 Россия, Тула, Центральная ул., 204\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_SUPERADMIN\",\r\n            \"ROLE_ADMIN\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": -123,\r\n        \"userName\": \"arkadiy.frolov\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"arkadiy.frolov@yandex.ru\",\r\n        \"fullName\": \"Фролов Аркадий\",\r\n        \"dateBirth\": \"2011-11-02\",\r\n        \"address\": \"493770 Россия, Саратов, Школьная пр., 277 кв. 779\",\r\n        \"roles\": [\r\n            \"ROLE_GUEST\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": 284,\r\n        \"userName\": \"igorevna.anna\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"igorevna.anna@yahoo.com\",\r\n        \"fullName\": \"Анна Игоревна Шубина\",\r\n        \"dateBirth\": \"2012-06-21\",\r\n        \"address\": \"871545 Россия, Ростов-на-Дону, ул. Спортивная, 301\",\r\n        \"roles\": [\r\n            \"ROLE_SUPERADMIN\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": -425,\r\n        \"userName\": \"margarita.petrova\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"margarita.petrova@ya.ru\",\r\n        \"fullName\": \"Петрова Маргарита\",\r\n        \"dateBirth\": \"2005-07-19\",\r\n        \"address\": \"975798 Россия, Новосибирск, пр. Коммунальная, 630\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_SUPERADMIN\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": 286,\r\n        \"userName\": \"valentinovich.dmitriy\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"valentinovich.dmitriy@yahoo.com\",\r\n        \"fullName\": \"Дмитрий Валентинович Павлов\",\r\n        \"dateBirth\": \"1989-09-16\",\r\n        \"address\": \"690401 Россия, Хабаровск, проспект Кирова, 299 кв. 347\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_SUPERADMIN\",\r\n            \"ROLE_GUEST\",\r\n            \"ROLE_ADMIN\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": -9827,\r\n        \"userName\": \"vadim.yermakov\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"vadim.yermakov@ya.ru\",\r\n        \"fullName\": \"Ермаков Вадим\",\r\n        \"dateBirth\": \"2010-05-13\",\r\n        \"address\": \"162053 Россия, Иркутск, Пионерская проспект, 757 кв. 535\",\r\n        \"roles\": [\r\n            \"ROLE_SUPERADMIN\",\r\n            \"ROLE_GUEST\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": -28,\r\n        \"userName\": \"denis.lapin\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"denis.lapin@hotmail.com\",\r\n        \"fullName\": \"Лапин Денис Васильевич\",\r\n        \"dateBirth\": \"1977-12-15\",\r\n        \"address\": \"491838 Россия, Иркутск, Колхозная пр., 007 кв. 619\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_SUPERADMIN\",\r\n            \"ROLE_ADMIN\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": -529,\r\n        \"userName\": \"arina.frolova\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"arina.frolova@gmail.com\",\r\n        \"fullName\": \"Фролова Арина\",\r\n        \"dateBirth\": \"2011-06-25\",\r\n        \"address\": \"266134 Россия, Пермь, Куйбышева пр., 844 кв. 130\",\r\n        \"roles\": [\r\n            \"ROLE_GUEST\"\r\n        ]\r\n    },\r\n    {\r\n        \"id\": -330,\r\n        \"userName\": \"safonov.aleksey\",\r\n        \"password\": \"Пароль_не_отображается_/_The_password_is_not_displayed\",\r\n        \"email\": \"safonov.aleksey@gmail.com\",\r\n        \"fullName\": \"Алексей Сафонов\",\r\n        \"dateBirth\": \"2007-09-02\",\r\n        \"address\": \"030880 Россия, Тула, улица Садовый, 002 кв. 407\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_SUPERADMIN\",\r\n            \"ROLE_GUEST\",\r\n            \"ROLE_ADMIN\"\r\n        ]\r\n    }\r\n]"
+						},
+						"url": {
+							"raw": "{{admin_url}}/create_any_users",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"create_any_users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get All Users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer{{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}/all_users",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"all_users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id_viewed_user",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin_url}}/view_user",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"view_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 11,\r\n    \"userName\": \"valeriy2.kiselev2\",\r\n    \"password\": \"1234\",\r\n    \"email\": \"valeriy.kiselev@gmail.com2\",\r\n    \"fullName\": \"Киселев3 Валерий3\",\r\n    \"dateBirth\": \"2011-06-22\",\r\n    \"address\": \"776207 Россия, Саратов, ул. Куйбышева, 297 кв. 024\",\r\n    \"roles\": [\r\n        \"ROLE_USER\",\r\n        \"ROLE_SUPERADMIN\",\r\n        \"ROLE_GUEST\",\r\n        \"ROLE_ADMIN\"\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{admin_url}}/edit",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "id_removed_user",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin_url}}/delete",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete Users",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}/delete_all",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"delete_all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view current User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin_url}}/current_user",
+							"host": [
+								"{{admin_url}}"
+							],
+							"path": [
+								"current_user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server_port}}/logout",
+							"host": [
+								"{{server_port}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "REST API"
+		}
+	],
+	"variable": [
+		{
+			"key": "server_port",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
