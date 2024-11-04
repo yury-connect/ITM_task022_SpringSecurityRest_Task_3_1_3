@@ -47,7 +47,7 @@ public class RestAdminController extends AbstractController {
 
     // ПЕРЕПИСАТЬ, тут должно пол логике возвращать созданных пользователей
     @Operation(summary = "Генерация тестовых пользователей (POST)")
-    @GetMapping("/generate_users")
+    @PostMapping("/generate_users")
     public ResponseEntity<List<UserDTO>> generateUsers(@RequestParam(name = "count_generated_users", required = false, defaultValue = "0") Integer count) {
         List<UserDTO> generatedUsersDTO = userUtilService.generateTestData(count)
                 .stream()
@@ -111,15 +111,15 @@ public class RestAdminController extends AbstractController {
 
     @Operation(summary = "Обновление данных пользователя (POST с имитацией PUT)")
     @PostMapping("/edit")
-    public ResponseEntity<User> editUser(@RequestBody UserDTO dto) {
+    public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO dto) {
 
         System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()\n\tUserDTO = \t " + dto + "\n");
 
-        User updatedUser = userService.updateUser(dtoUtils.convertToUser(dto));
+        UserDTO updatedUserDTO = dtoUtils.convertToUserDto(userService.updateUser(dtoUtils.convertToUser(dto)));
 
-        System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()\n\tUser = \t " + updatedUser + "\n");
+        System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()\n\tUser = \t " + updatedUserDTO + "\n");
 
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok(updatedUserDTO);
     }
 
 
