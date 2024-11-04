@@ -7,21 +7,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.controller.mvc.AbstractController;
 import ru.itmentor.spring.boot_security.demo.model.AuthRequest;
 import ru.itmentor.spring.boot_security.demo.model.AuthResponse;
-import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.RoleService;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
 import ru.itmentor.spring.boot_security.demo.util.JwtUtil;
-
-import java.util.Set;
-
-import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
 
 
 // Перевод MVC-приложения на Spring Boot в RESTful API.
@@ -31,7 +24,7 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PAS
  */
 @RestController
 @RequestMapping(value = "/api/auth")
-public class RestLoginController extends AbstractController {
+public class RestAuthController extends AbstractController {
 
     private UserUtilService userUtilService;
     private RoleService roleService;
@@ -39,11 +32,11 @@ public class RestLoginController extends AbstractController {
     private final JwtUtil jwtUtil;
 
 
-    public RestLoginController(UserService service,
-                               UserUtilService userUtilService,
-                               RoleService roleService,
-                               AuthenticationManager authenticationManager,
-                               JwtUtil jwtUtil) {
+    public RestAuthController(UserService service,
+                              UserUtilService userUtilService,
+                              RoleService roleService,
+                              AuthenticationManager authenticationManager,
+                              JwtUtil jwtUtil) {
         super(service); //  прокидываю UserService в общий суперкласс) {
         this.userUtilService = userUtilService;
         this.roleService = roleService;
@@ -52,7 +45,7 @@ public class RestLoginController extends AbstractController {
     }
 
 
-    @Operation(summary = "Получение токена (POST)")
+    @Operation(summary = "Получение токена/ аутентификация  (POST)")
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
         System.out.println("\n\n\t" + authRequest.getUserName() + "\n\n");

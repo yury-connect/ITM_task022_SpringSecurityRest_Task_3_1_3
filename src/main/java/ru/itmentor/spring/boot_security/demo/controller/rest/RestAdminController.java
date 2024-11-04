@@ -42,7 +42,7 @@ public class RestAdminController extends AbstractController {
 
     // ПЕРЕПИСАТЬ, тут должно пол логике возвращать созданных пользователей
     @Operation(summary = "Генерация тестовых пользователей (POST)")
-    @PostMapping("/generate_users")
+    @GetMapping("/generate_users")
     public ResponseEntity<List<User>> generateUsers(@RequestParam(name = "count_generated_users", required = false, defaultValue = "0") Integer count) {
         List<User> generatedUsers = userUtilService.generateTestData(count)
                 .stream()
@@ -89,9 +89,11 @@ public class RestAdminController extends AbstractController {
     @Operation(summary = "Просмотр информации о конкретном пользователе (GET)")
     @GetMapping("/view_user")
     public ResponseEntity<User> showUser(@RequestParam("id_viewed_user") Integer id) {
-        System.out.println("URL: /api/authenticated/admin/view" + "\tMethod: showUser()");
         User viewedUser = userService.findUserById(id);
         viewedUser.setPassword(PASSWORD_PLACE_HOLDER);
+
+        System.out.println("URL: /api/authenticated/admin/view" + "\tMethod: showUser()\nviewedUser = \t " + viewedUser);
+
         return ResponseEntity.ok(viewedUser);
     }
 
@@ -99,8 +101,8 @@ public class RestAdminController extends AbstractController {
 
     @Operation(summary = "Обновление данных пользователя (POST с имитацией PUT)")
     @PostMapping("/edit")
-    public ResponseEntity<User> editUser(@ModelAttribute("edited_user") User user) {
-        System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()");
+    public ResponseEntity<User> editUser(@RequestBody User user) {
+        System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()\n\tedited_user = \t " + user + "\n");
         User updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
     }
