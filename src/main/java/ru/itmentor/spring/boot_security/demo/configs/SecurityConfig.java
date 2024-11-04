@@ -52,8 +52,9 @@ public class SecurityConfig {
                 // Настройка для REST API и защищенных маршрутов
             .authorizeRequests() // для REST-эндпоинтов (/api/admin/** и /api/public/**). // Использование httpBasic() для REST. // CSRF отключен для REST API.
                 .antMatchers(HttpMethod.GET, "/api/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
-                .antMatchers(HttpMethod.POST, "/api/authenticated/admin/**").hasRole("ADMIN")
-                .antMatchers("/api/public/**", "/css/**", "/public/**",  "/loginURL", "/registrate", "/api/authenticated/admin/authenticate").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
+                .antMatchers(HttpMethod.POST, "/api/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+//                .antMatchers(HttpMethod.POST, "/api/authenticated/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/public/**", "/css/**", "/public/**",  "/loginURL", "/registrate", "/api/auth/**").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
 
                 .antMatchers("/authenticated/user/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN") // на страницы пользователей пускаем только С РОЛЬЮ 'USER', 'ADMIN' и 'SUPERADMIN'
                 .antMatchers("/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // в админку пускаем только С РОЛЯМИ 'ADMIN' и 'SUPERADMIN'

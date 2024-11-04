@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(User user) {
+    public User updateUser(User user) {
         if (Constants.PASSWORD_PLACE_HOLDER.equals(user.getPassword())) {
             // Если пароль не поменяется, когда обновленный пользователь прилетел из формы - то восстанавливаем прежний пароль;
             final String previousPassword = userRepository.findById(user.getId()).get().getPassword();
@@ -69,13 +69,16 @@ public class UserServiceImpl implements UserService {
             // Если пароль поменяется (т.е. введен новый), то кодируем новый пароль;
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        userRepository.save(user);
+        User updatedUser = userRepository.save(user);
+        return updatedUser;
     }
 
     @Override
     @Transactional
-    public void deleteUserById(int id) {
+    public User deleteUserById(int id) {
+        User deletedUser = userRepository.findById(id).get();
         userRepository.deleteById(id);
+        return deletedUser;
     }
 
     @Override

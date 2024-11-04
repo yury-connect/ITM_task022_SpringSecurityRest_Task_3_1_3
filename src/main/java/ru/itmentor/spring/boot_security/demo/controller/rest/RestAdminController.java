@@ -2,27 +2,17 @@ package ru.itmentor.spring.boot_security.demo.controller.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.controller.mvc.AbstractController;
-import ru.itmentor.spring.boot_security.demo.model.AuthRequest;
-import ru.itmentor.spring.boot_security.demo.model.AuthResponse;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.*;
-import ru.itmentor.spring.boot_security.demo.util.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD_PLACE_HOLDER;
-import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
 
 
 // Перевод MVC-приложения на Spring Boot в RESTful API.
@@ -31,57 +21,34 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PAS
 public class RestAdminController extends AbstractController {
 
     private UserUtilService userUtilService;
-    private RoleService roleService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
 
 
     @Autowired
     public RestAdminController(UserService service,
-                               UserUtilService userUtilService,
-                               RoleService roleService,
-                               AuthenticationManager authenticationManager,
-                               JwtUtil jwtUtil) {
+                               UserUtilService userUtilService) {
         super(service); //  прокидываю UserService в общий суперкласс
         this.userUtilService = userUtilService;
-        this.roleService = roleService;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
     }
 
-
-    @Operation(summary = "Получение токена (POST)")
-    @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
-        System.out.println("\n\n\t" + authRequest.getUserName() + "\n\n");
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверные учетные данные");
-        }
-
-        final UserDetails userDetails = userService.loadUserByUsername(authRequest.getUserName());
-        final String jwt = jwtUtil.generateToken(userDetails.getUsername());
-
-        return ResponseEntity.ok(new AuthResponse(jwt));
-    }
 
 
 
     @Operation(summary = "Перенаправление на список всех пользователей (GET)")
     @GetMapping()
-    public String root() { // В этом случае - перенаправлю на страничку по умолчанию
-        return "redirect:/authenticated/admin/all_users";
+    public ResponseEntity<List<User>> root() { // В этом случае - перенаправлю на страничку по умолчанию
+        System.out.println();
+        return getAllUsers();
     }
 
     // ПЕРЕПИСАТЬ, тут должно пол логике возвращать созданных пользователей
     @Operation(summary = "Генерация тестовых пользователей (POST)")
     @PostMapping("/generate_users")
-    public ResponseEntity<Integer> generateUsers(@RequestParam(name = "count_generated_users", required = false, defaultValue = "0") Integer count) {
-        userUtilService.generateTestData(count);
-        return ResponseEntity.ok(count);
+    public ResponseEntity<List<User>> generateUsers(@RequestParam(name = "count_generated_users", required = false, defaultValue = "0") Integer count) {
+        List<User> generatedUsers = userUtilService.generateTestData(count)
+                .stream()
+                .peek(user -> user.setPassword(PASSWORD_PLACE_HOLDER))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(generatedUsers);
     }
 
 
@@ -108,6 +75,7 @@ public class RestAdminController extends AbstractController {
     @Operation(summary = "Получение всех пользователей (GET)")
     @GetMapping("/all_users")
     public ResponseEntity<List<User>> getAllUsers() {
+        System.out.println("URL: /api/authenticated/admin/all_users" + "\tMethod: getAllUsers()");
         List<User> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
@@ -118,68 +86,56 @@ public class RestAdminController extends AbstractController {
 
 
 
-    // Просмотр информации о конкретном пользователе (GET)
-    @GetMapping("/view")
-    public String showUserPage(@RequestParam("id_viewed_user") Integer id, Model model) {
+    @Operation(summary = "Просмотр информации о конкретном пользователе (GET)")
+    @GetMapping("/view_user")
+    public ResponseEntity<User> showUser(@RequestParam("id_viewed_user") Integer id) {
+        System.out.println("URL: /api/authenticated/admin/view" + "\tMethod: showUser()");
         User viewedUser = userService.findUserById(id);
         viewedUser.setPassword(PASSWORD_PLACE_HOLDER);
-        model.addAttribute("viewed_user", viewedUser);
-        return "admin-pages/view_user_page";
+        return ResponseEntity.ok(viewedUser);
     }
 
 
 
-    // Отображение страницы редактирования пользователя (GET)
-    @GetMapping("/edit")
-    public String showEditUsersPage(@RequestParam("id_edited_user") Integer id, Model model) {
-        User editedUser = userService.findUserById(id);
-        editedUser.setPassword(PASSWORD_PLACE_HOLDER);
-        model.addAttribute("edited_user", editedUser);
-        model.addAttribute("all_existing_roles", roleService.findAllRoles());
-        return "admin-pages/update_user_page";
-    }
-
-    // Обновление данных пользователя (POST с имитацией PUT)
+    @Operation(summary = "Обновление данных пользователя (POST с имитацией PUT)")
     @PostMapping("/edit")
-    public String editUsers(@ModelAttribute("edited_user") User user) {
-        userService.updateUser(user);
-        return "redirect:/authenticated/admin/all";
+    public ResponseEntity<User> editUser(@ModelAttribute("edited_user") User user) {
+        System.out.println("URL: /api/authenticated/admin/edit" + "\tMethod: editUser()");
+        User updatedUser = userService.updateUser(user);
+        return ResponseEntity.ok(updatedUser);
     }
 
 
 
-    // Подтверждение удаления пользователя (GET)
-    @GetMapping("/delete")
-    public String showDeleteUserPage(@RequestParam("id_removed_user") Integer id, Model model) {
-        model.addAttribute("removed_user", userService.findUserById(id));
-        return "admin-pages/delete_user_page";
-    }
 
-    // Удаление пользователя (POST с имитацией DELETE)
+    @Operation(summary = "Удаление пользователя (POST с имитацией DELETE)")
     @PostMapping("/delete")
-    public String deleteOneUser(@RequestParam(name = "id_removed_user") Integer id) {
-        userService.deleteUserById(id);
-        return "redirect:/authenticated/admin/all";
+    public ResponseEntity<User> deleteOneUser(@RequestParam(name = "id_removed_user") Integer id) {
+        User deletedUser = userService.deleteUserById(id);
+        deletedUser.setPassword(PASSWORD_PLACE_HOLDER);
+        return ResponseEntity.ok(deletedUser);
+//        return ResponseEntity.noContent().build(); // Возвращаем статус 204 No Content
     }
 
-    // Удаление всех пользователей (POST с имитацией DELETE)
+    @Operation(summary = "Удаление всех пользователей (POST с имитацией DELETE)")
     @PostMapping("/delete_all")
-    public String deleteAllUsers() {
+    public ResponseEntity<List<User>> deleteAllUsers() {
         List<User> deleteUsersList = new ArrayList<>(userService.findAllUsers());
-        deleteUsersList.forEach(usr -> userService.deleteUserById(usr.getId()));
-        return "redirect:/authenticated/admin/all";
+        deleteUsersList.forEach(usr -> {
+            userService.deleteUserById(usr.getId());
+            usr.setPassword(PASSWORD_PLACE_HOLDER);
+        });
+        return ResponseEntity.ok(deleteUsersList);
     }
 
 
 
-    // Просмотр информации о залогиненном пользователе (GET)
+    @Operation(summary = "Просмотр информации о залогиненном пользователе (GET)")
     @GetMapping("/current_user")
-    public String showCurrentUserPage(Model model) {
+    public ResponseEntity<User> showCurrentUser() {
         User currentUser = getCurrentUser(); // получаю (GET) залогиненного пользователя из общего суперкласса
         currentUser.setPassword(PASSWORD_PLACE_HOLDER);
-
-        model.addAttribute("viewed_user", currentUser);
-        return "users_pages/user_info_page";
+        return ResponseEntity.ok(currentUser);
     }
 }
 

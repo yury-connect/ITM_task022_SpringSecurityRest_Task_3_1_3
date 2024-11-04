@@ -2,13 +2,15 @@ package ru.itmentor.spring.boot_security.demo.model;
 
 
 public class AuthResponse {
-    private final String jwt;
 
-    public AuthResponse(String jwt) {
-        this.jwt = jwt;
+    private final String jwtToken;
+
+
+    public AuthResponse(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 
-    public String getJwt() {
-        return jwt;
+    public String getJwtToken() {
+        return jwtToken;
     }
 }
