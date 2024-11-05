@@ -8,11 +8,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.itmentor.spring.boot_security.demo.service.UserService; // тут циклическая ссылка получится
 
 
 /**
@@ -23,18 +21,13 @@ import ru.itmentor.spring.boot_security.demo.service.UserService; // тут ци
 public class SecurityConfig {
 
     private final AuthenticationSuccessHandler successUserHandler;
-    private final UserService userService; // тут циклическая ссылка получится
-    private final PasswordEncoder passwordEncoder;
     private JwtRequestFilter jwtRequestFilter;
+
 
     @Autowired
     public SecurityConfig(AuthenticationSuccessHandler successUserHandler,
-                          UserService userService,
-                          PasswordEncoder passwordEncoder,
                           JwtRequestFilter jwtRequestFilter) {
         this.successUserHandler = successUserHandler;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
@@ -53,7 +46,6 @@ public class SecurityConfig {
             .authorizeRequests() // для REST-эндпоинтов (/api/admin/** и /api/public/**). // Использование httpBasic() для REST. // CSRF отключен для REST API.
                 .antMatchers(HttpMethod.GET, "/api/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .antMatchers(HttpMethod.POST, "/api/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
-//                .antMatchers(HttpMethod.POST, "/api/authenticated/admin/**").hasRole("ADMIN")
                 .antMatchers("/api/public/**", "/css/**", "/public/**",  "/loginURL", "/registrate", "/api/auth/**").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
 
                 .antMatchers("/authenticated/user/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN") // на страницы пользователей пускаем только С РОЛЬЮ 'USER', 'ADMIN' и 'SUPERADMIN'
@@ -93,7 +85,6 @@ public class SecurityConfig {
 //                .loginPage("/login") // или можно '.loginPage("/custom-login")' Указывает Spring Security на кастомную страницу логина
 //                .loginProcessingUrl("/custom-login-processing") // -чтобы запросы на вход обрабатывались по определенному URL
 //                .failureHandler() // кастомный обработчик для ошибки авторизации
-
 
 //                .and()
 //                .rememberMe() // Функция "Запомнить меня" полезна, если вы хотите, чтобы пользователи оставались залогиненными после закрытия браузера.
