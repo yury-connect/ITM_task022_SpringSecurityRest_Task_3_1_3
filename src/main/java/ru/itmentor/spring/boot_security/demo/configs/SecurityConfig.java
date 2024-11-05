@@ -44,8 +44,8 @@ public class SecurityConfig {
         http
                 // Настройка для REST API и защищенных маршрутов
             .authorizeRequests() // для REST-эндпоинтов (/api/admin/** и /api/public/**). // Использование httpBasic() для REST. // CSRF отключен для REST API.
-                .antMatchers(HttpMethod.GET, "/api/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
-                .antMatchers(HttpMethod.POST, "/api/authenticated/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .antMatchers(HttpMethod.GET, "/api/authenticated/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .antMatchers(HttpMethod.POST, "/api/authenticated/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .antMatchers("/api/public/**", "/css/**", "/public/**",  "/loginURL", "/registrate", "/api/auth/**").permitAll() // ВСЕМ: Разрешить доступ к стилям и публичным страничкам
 
                 .antMatchers("/authenticated/user/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN") // на страницы пользователей пускаем только С РОЛЬЮ 'USER', 'ADMIN' и 'SUPERADMIN'

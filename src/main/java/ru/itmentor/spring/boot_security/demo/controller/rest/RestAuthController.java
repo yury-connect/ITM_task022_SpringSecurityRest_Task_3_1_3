@@ -7,79 +7,113 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.controller.mvc.AbstractController;
-import ru.itmentor.spring.boot_security.demo.model.AuthRequest;
-import ru.itmentor.spring.boot_security.demo.model.AuthResponse;
-import ru.itmentor.spring.boot_security.demo.service.RoleService;
-import ru.itmentor.spring.boot_security.demo.service.UserService;
-import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
-import ru.itmentor.spring.boot_security.demo.util.JwtUtil;
+import ru.itmentor.spring.boot_security.demo.dto.UserDTO;
+import ru.itmentor.spring.boot_security.demo.model.*;
+import ru.itmentor.spring.boot_security.demo.service.*;
+import ru.itmentor.spring.boot_security.demo.util.*;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
-// Перевод MVC-приложения на Spring Boot в RESTful API.
-
-/**
- * Контроллер залогиниваться/ регистрации/ разлогиниваться
- */
 @RestController
-@RequestMapping(value = "/api/auth")
+@RequestMapping("/api/auth")
 public class RestAuthController extends AbstractController {
 
-    private UserUtilService userUtilService;
+    private final DtoUtils dtoUtils;
     private RoleService roleService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
 
     public RestAuthController(UserService service,
-                              UserUtilService userUtilService,
                               RoleService roleService,
                               AuthenticationManager authenticationManager,
-                              JwtUtil jwtUtil) {
-        super(service); //  прокидываю UserService в общий суперкласс) {
-        this.userUtilService = userUtilService;
+                              JwtUtil jwtUtil, DtoUtils dtoUtils,
+                              PasswordEncoder passwordEncoder) {
+        super(service); //  прокидываю UserService в общий суперкласс
         this.roleService = roleService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.dtoUtils = dtoUtils;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
-    @Operation(summary = "Получение токена/ аутентификация  (POST)")
+
+    @Operation(summary = "Получение токена/ залогинивание/ аутентификация (POST)")
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
-        System.out.println("\n\n\t" + authRequest.getUserName() + "\n\n");
-        try {
+    public ResponseEntity<AuthResponse> logIn(@RequestBody AuthRequest authRequest) {
+        System.out.println("\n\n\n\tПопытка залогиниться, пользователь: " + authRequest.getUserName() + "\n");
+
+        try { // Попытка аутентификации пользователя
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(
+                            authRequest.getUserName(), authRequest.getPassword()
+                    )
             );
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверные учетные данные");
+        } catch (BadCredentialsException e) { // Неверные учетные данные
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Неверные учетные данные"));
         }
 
+        // Загрузка данных пользователя
         final UserDetails userDetails = userService.loadUserByUsername(authRequest.getUserName());
+
+        // Генерация JWT токена
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse(jwt));
+        System.out.println("\tЗалогинился пользователь: " + authRequest.getUserName() + "\n\n\n");
+
+        // Возвращаем токен
+        AuthResponse response = new AuthResponse(jwt);
+        return ResponseEntity.ok(response);
     }
 
 
-//    // Отображение страницы регистрации пользователя (GET)
-//    @GetMapping("/registrate")
-//    public String showRegistrationUsersPage(Model model) {
-//        User defaultUser = userUtilService.generateNewUsers(-1).get(0);
-//        defaultUser.setPassword(USER_PASSWORD_DEFAULT);
-//        model.addAttribute("created_user", defaultUser);
-//
-//        return "sevice-pages/registration_page";
-//    }
-//
-//    // Создание / регистрации нового пользователя (POST)
-//    @PostMapping("/registrate")
-//    public String registrationUser(@ModelAttribute("created_user") User user) {
-//        System.out.println("\n\n\tRegistration user: " + user + "\n\n");
-//        user.setRoles(Set.of(roleService.findRoleByName("ROLE_GUEST").get()));
-//        userService.createUser(user);
-//        return "redirect:/";
-//    }
+    @Operation(summary = "Разлогинивание текущего пользователя (POST)")
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logOut(HttpServletRequest request) {
+        try {
+            // Здесь можно добавить дополнительную логику аннулирования токена,
+            // например, добавить токен в черный список.
+
+            // Используем встроенный метод сервлета для разлогинивания пользователя (если используем сессионное хранение)
+            request.logout();
+            return ResponseEntity.noContent().build(); // Возвращаем статус 204 No Content
+        } catch (ServletException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // В случае ошибки возвращаем 500 Internal Server Error
+        }
+    }
+
+
+    @Operation(summary = "Регистрация нового пользователя (POST)")
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody UserDTO registerUserDTO) {
+        // Создаем роли для нового пользователя
+        Set<Role> createdUserRoles = Stream.generate(
+                () -> roleService.findRoleByName("ROLE_GUEST").get()
+        ).collect(Collectors.toSet());
+
+        // Преобразуем DTO в объект User
+        User user = dtoUtils.convertToUser(registerUserDTO);
+        user.setRoles(createdUserRoles);
+        user.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
+
+        // Сохраняем пользователя в базе данных
+        User createdUser = userService.createUser(user);
+
+        // Преобразуем сохраненного пользователя обратно в UserDTO
+        UserDTO createdUserDTO = dtoUtils.convertToUserDto(createdUser);
+
+        // Возвращаем ResponseEntity с кодом 201 и информацией о созданном пользователе
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDTO);
+    }
 }

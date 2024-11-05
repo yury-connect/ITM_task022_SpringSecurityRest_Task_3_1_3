@@ -21,16 +21,13 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD
 @RequestMapping(value = "/api/authenticated/admin")
 public class RestAdminController extends AbstractController {
 
-    private UserUtilService userUtilService;
     private DtoUtils dtoUtils;
 
 
     @Autowired
     public RestAdminController(UserService service,
-                               UserUtilService userUtilService,
                                DtoUtils dtoUtils) {
         super(service); //  прокидываю UserService в общий суперкласс
-        this.userUtilService = userUtilService;
         this.dtoUtils = dtoUtils;
     }
 
@@ -40,12 +37,6 @@ public class RestAdminController extends AbstractController {
     @GetMapping()
     public ResponseEntity<List<UserDTO>> root() { // В этом случае - перенаправлю на страничку по умолчанию
         return getAllUsers();
-    }
-
-    @Operation(summary = "Генерация тестовых пользователей (POST)")
-    @PostMapping("/generate_users")
-    public ResponseEntity<List<UserDTO>> generateUsers(@RequestParam(name = "count", defaultValue = "0") Integer count) {
-        return ResponseEntity.ok(userUtilService.generateTestData(count));
     }
 
 
@@ -70,7 +61,7 @@ public class RestAdminController extends AbstractController {
 
 
     @Operation(summary = "Получение всех пользователей (GET)")
-    @GetMapping("/all_users")
+    @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> dtoList = userService.findAllUsers().stream()
                 .map(dtoUtils::convertToUserDto)
@@ -115,24 +106,13 @@ public class RestAdminController extends AbstractController {
 
 
     @Operation(summary = "Удаление всех пользователей (DELETE)")
-    @DeleteMapping("/all_users")
+    @DeleteMapping("/users")
     public ResponseEntity<List<UserDTO>> deleteAllUsers() {
         List<UserDTO> deletedUsersList = userService.findAllUsers().stream()
                 .map(dtoUtils::convertToUserDto)
                 .collect(Collectors.toList());
         deletedUsersList.forEach(dto -> userService.deleteUserById(dto.getId()));
         return ResponseEntity.ok(deletedUsersList);
-    }
-
-
-
-
-    @Operation(summary = "Просмотр информации о залогиненном пользователе (GET)")
-    @GetMapping("/current_user")
-    public ResponseEntity<UserDTO> showCurrentUser() {
-        User currentUser = getCurrentUser();
-        currentUser.setPassword(PASSWORD_PLACE_HOLDER);
-        return ResponseEntity.ok(dtoUtils.convertToUserDto(currentUser));
     }
 }
 
