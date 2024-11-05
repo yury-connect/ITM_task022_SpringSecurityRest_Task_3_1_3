@@ -18,9 +18,10 @@ import ru.itmentor.spring.boot_security.demo.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @RestController
@@ -52,7 +53,7 @@ public class RestAuthController extends AbstractController {
     @Operation(summary = "Получение токена/ залогинивание/ аутентификация (POST)")
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> logIn(@RequestBody AuthRequest authRequest) {
-        System.out.println("\n\n\n\tПопытка залогиниться, пользователь: " + authRequest.getUserName() + "\n");
+        System.out.println("\n\n\tПопытка залогиниться, пользователь: " + authRequest.getUserName() + "\n");
 
         try { // Попытка аутентификации пользователя
             authenticationManager.authenticate(
@@ -70,7 +71,7 @@ public class RestAuthController extends AbstractController {
         // Генерация JWT токена
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
-        System.out.println("\tЗалогинился пользователь: " + authRequest.getUserName() + "\n\n\n");
+        System.out.println("\n\n\n\tЗалогинился пользователь: " + authRequest.getUserName() + "\n\n\n");
 
         // Возвращаем токен
         AuthResponse response = new AuthResponse(jwt);
@@ -97,10 +98,14 @@ public class RestAuthController extends AbstractController {
     @Operation(summary = "Регистрация нового пользователя (POST)")
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserDTO registerUserDTO) {
-        // Создаем роли для нового пользователя
-        Set<Role> createdUserRoles = Stream.generate(
-                () -> roleService.findRoleByName("ROLE_GUEST").get()
-        ).collect(Collectors.toSet());
+        // Поиск роли "ROLE_GUEST" единожды
+        Optional<Role> guestRoleOpt = roleService.findRoleByName("ROLE_GUEST");
+
+        if (guestRoleOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        Set<Role> createdUserRoles = Collections.singleton(guestRoleOpt.get());
 
         // Преобразуем DTO в объект User
         User user = dtoUtils.convertToUser(registerUserDTO);

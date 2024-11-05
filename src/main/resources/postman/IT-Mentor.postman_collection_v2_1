@@ -4,7 +4,7 @@
 		"name": "IT-Mentor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "8967691",
-		"_collection_link": "https://web.postman.co/workspace/New-Team-Workspace~8f191f88-e8ec-40af-b710-248189b66b12/collection/8967691-0849ceeb-6b4d-46f8-95f1-efbcfe349074?source=collection_link"
+		"_collection_link": "https://lunar-equinox-676595.postman.co/workspace/New-Team-Workspace~8f191f88-e8ec-40af-b710-248189b66b12/collection/8967691-0849ceeb-6b4d-46f8-95f1-efbcfe349074?action=share&source=collection_link&creator=8967691"
 	},
 	"item": [
 		{
@@ -133,7 +133,39 @@
 					"name": "-= ACTUAL =-",
 					"item": [
 						{
-							"name": "Authenticate",
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"id\": -231,\r\n        \"userName\": \"q\",\r\n        \"password\": \"1234\",\r\n        \"email\": \"artem.golubev@yandex.ru\",\r\n        \"fullName\": \"Голубев Артём\",\r\n        \"dateBirth\": \"2002-03-02\",\r\n        \"address\": \"014833 Россия, Владивосток, Набережная пр., 291 кв. 049\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_GUEST\",\r\n            \"ROLE_ADMIN\"\r\n        ]\r\n    }"
+								},
+								"url": {
+									"raw": "{{auth_url}}/register",
+									"host": [
+										"{{auth_url}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LogIn",
 							"event": [
 								{
 									"listen": "test",
@@ -177,13 +209,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{server_port}}/api/auth/login",
+									"raw": "{{auth_url}}/login",
 									"host": [
-										"{{server_port}}"
+										"{{auth_url}}"
 									],
 									"path": [
-										"api",
-										"auth",
 										"login"
 									]
 								}
@@ -217,12 +247,12 @@
 									]
 								},
 								"url": {
-									"raw": "{{admin_url}}/generate_users",
+									"raw": "{{services_url}}/generate_test_users",
 									"host": [
-										"{{admin_url}}"
+										"{{services_url}}"
 									],
 									"path": [
-										"generate_users"
+										"generate_test_users"
 									]
 								}
 							},
@@ -377,12 +407,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{admin_url}}/all_users",
+									"raw": "{{admin_url}}/users",
 									"host": [
 										"{{admin_url}}"
 									],
 									"path": [
-										"all_users"
+										"users"
 									]
 								}
 							},
@@ -610,13 +640,13 @@
 									]
 								},
 								"url": {
-									"raw": "{{admin_url}}/users/12",
+									"raw": "{{admin_url}}/users/10",
 									"host": [
 										"{{admin_url}}"
 									],
 									"path": [
 										"users",
-										"12"
+										"10"
 									]
 								}
 							},
@@ -686,7 +716,7 @@
 							"response": []
 						},
 						{
-							"name": "delete Users",
+							"name": "delete All Users",
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -714,12 +744,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{admin_url}}/all_users",
+									"raw": "{{admin_url}}/users",
 									"host": [
 										"{{admin_url}}"
 									],
 									"path": [
-										"all_users"
+										"users"
 									]
 								}
 							},
@@ -757,9 +787,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{admin_url}}/current_user",
+									"raw": "{{services_url}}/current_user",
 									"host": [
-										"{{admin_url}}"
+										"{{services_url}}"
 									],
 									"path": [
 										"current_user"
@@ -769,14 +799,14 @@
 							"response": []
 						},
 						{
-							"name": "logout",
+							"name": "LogOut",
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{server_port}}/logout",
+									"raw": "{{auth_url}}/logout",
 									"host": [
-										"{{server_port}}"
+										"{{auth_url}}"
 									],
 									"path": [
 										"logout"

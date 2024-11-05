@@ -4,7 +4,7 @@
 		"name": "IT-Mentor",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "8967691",
-		"_collection_link": "https://web.postman.co/workspace/New-Team-Workspace~8f191f88-e8ec-40af-b710-248189b66b12/collection/8967691-0849ceeb-6b4d-46f8-95f1-efbcfe349074?source=collection_link"
+		"_collection_link": "https://lunar-equinox-676595.postman.co/workspace/New-Team-Workspace~8f191f88-e8ec-40af-b710-248189b66b12/collection/8967691-0849ceeb-6b4d-46f8-95f1-efbcfe349074?action=share&source=collection_link&creator=8967691"
 	},
 	"item": [
 		{
@@ -110,7 +110,31 @@
 					"name": "-= ACTUAL =-",
 					"item": [
 						{
-							"name": "Authenticate",
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"id\": -231,\r\n        \"userName\": \"q\",\r\n        \"password\": \"1234\",\r\n        \"email\": \"artem.golubev@yandex.ru\",\r\n        \"fullName\": \"Голубев Артём\",\r\n        \"dateBirth\": \"2002-03-02\",\r\n        \"address\": \"014833 Россия, Владивосток, Набережная пр., 291 кв. 049\",\r\n        \"roles\": [\r\n            \"ROLE_USER\",\r\n            \"ROLE_GUEST\",\r\n            \"ROLE_ADMIN\"\r\n        ]\r\n    }"
+								},
+								"url": "{{auth_url}}/register"
+							},
+							"response": []
+						},
+						{
+							"name": "LogIn",
 							"event": [
 								{
 									"listen": "test",
@@ -153,7 +177,7 @@
 										}
 									}
 								},
-								"url": "{{server_port}}/api/auth/login"
+								"url": "{{auth_url}}/login"
 							},
 							"response": []
 						},
@@ -183,7 +207,7 @@
 										}
 									]
 								},
-								"url": "{{admin_url}}/generate_users"
+								"url": "{{services_url}}/generate_test_users"
 							},
 							"response": []
 						},
@@ -311,7 +335,7 @@
 										}
 									}
 								},
-								"url": "{{admin_url}}/all_users"
+								"url": "{{admin_url}}/users"
 							},
 							"response": []
 						},
@@ -500,7 +524,7 @@
 										}
 									]
 								},
-								"url": "{{admin_url}}/users/12"
+								"url": "{{admin_url}}/users/10"
 							},
 							"response": []
 						},
@@ -559,7 +583,7 @@
 							"response": []
 						},
 						{
-							"name": "delete Users",
+							"name": "delete All Users",
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -586,7 +610,7 @@
 										}
 									}
 								},
-								"url": "{{admin_url}}/all_users"
+								"url": "{{admin_url}}/users"
 							},
 							"response": []
 						},
@@ -621,16 +645,16 @@
 										}
 									}
 								},
-								"url": "{{admin_url}}/current_user"
+								"url": "{{services_url}}/current_user"
 							},
 							"response": []
 						},
 						{
-							"name": "logout",
+							"name": "LogOut",
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
-								"url": "{{server_port}}/logout"
+								"url": "{{auth_url}}/logout"
 							},
 							"response": []
 						}

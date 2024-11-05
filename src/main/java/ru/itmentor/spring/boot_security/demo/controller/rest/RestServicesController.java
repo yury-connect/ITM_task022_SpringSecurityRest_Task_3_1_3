@@ -50,6 +50,4 @@ public class RestServicesController extends AbstractController {
         currentUser.setPassword(PASSWORD_PLACE_HOLDER);
         return ResponseEntity.ok(dtoUtils.convertToUserDto(currentUser));
     }
-
-
 }
