@@ -21,8 +21,8 @@ public interface UserService extends UserDetailsService {
     List<User> findAllUsers();
 
     // Обновить информацию о пользователе
-    void updateUser(User user);
+    User updateUser(User user);
 
     // Удалить пользователя по ID
-    void deleteUserById(int id);
+    User deleteUserById(int id);
 }

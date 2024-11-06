@@ -3,10 +3,12 @@ package ru.itmentor.spring.boot_security.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.itmentor.spring.boot_security.demo.dto.UserDTO;
 import ru.itmentor.spring.boot_security.demo.model.Role;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.repository.RoleRepository;
 import ru.itmentor.spring.boot_security.demo.repository.UserRepository;
+import ru.itmentor.spring.boot_security.demo.util.DtoUtils;
 import ru.itmentor.spring.boot_security.demo.util.UserGenerator;
 
 import java.sql.Date;
@@ -25,25 +27,30 @@ public class UserUtilServiceImpl implements UserUtilService{
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserGenerator userGenerator;
+    private final DtoUtils dtoUtils;
 
 
     @Autowired
     public UserUtilServiceImpl(UserRepository userRepository,
                                RoleRepository roleRepository,
                                PasswordEncoder passwordEncoder,
-                               UserGenerator userGenerator) {
+                               UserGenerator userGenerator,
+                               DtoUtils dtoUtils) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userGenerator = userGenerator;
+        this.dtoUtils = dtoUtils;
     }
 
 
 
-    /*
-     * Генерация случайных пользователей
-     * Если count < 1, то создается один пользователь с значениями по умолчанию
-     * Если count >= 1, то генерируется указанное количество пользователей с фейковыми данными
+    /**
+     * Генерация случайных пользователей;
+     * Если count < 1, то создается один пользователь с значениями по умолчанию;
+     * Если count >= 1, то генерируется указанное количество пользователей с фейковыми данными;
+     * @param count - необходимое/ требуемое количество пользователей;
+     * @return - возвращает список тестовых пользователей с фейковыми данными;
      */
     @Override
     public List<User> generateNewUsers(int count) {
@@ -74,15 +81,31 @@ public class UserUtilServiceImpl implements UserUtilService{
     }
 
 
-    /*
-    Генерирует, а так-же заполняет таблицы указанным количеством случайных пользователей
-    Если count == null то будет записан один пользоватьель с данными по умолчанию
+    /**
+     * Генерирует, а так-же заполняет таблицы указанным количеством случайных пользователей;
+     * Если count == null то будет записан один пользоватьель с данными по умолчанию;
+     * @param count - На вход принимает необходимое количество генерируемых тестовых пользователей;
+     * @return - На выходе -возвращает уже помещенных в БД (т.е. уже существующих) и найденных в ней пользователей;
      */
     @Override
-    public void generateTestData(int count) {
-        generateNewUsers(count)
-                .stream()
-                .peek(user -> user.setPassword(passwordEncoder.encode(user.getPassword())))
-                .forEach(userRepository::save);
+    public List<UserDTO> generateTestData(int count) {
+        // Генерируем случайных пользователей
+        List<User> usersList = generateNewUsers(count).stream()
+                .map(user -> {
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    return userRepository.save(user);
+                })
+                .collect(Collectors.toList());
+
+        // Необходимо найти сохраненных в БД пользователей, преобразовать их в List<UserDTO> и вернуть его.
+        List<UserDTO> usersDtoList = usersList.stream()
+                .map(usr -> userRepository.findByUserName(usr.getUserName())
+                        .map(dtoUtils::convertToUserDto)
+                        .orElseThrow(
+                                () -> new RuntimeException("User not found: " + usr.getUserName())
+                        )
+                )
+                .collect(Collectors.toList());
+        return usersDtoList;
     }
 }

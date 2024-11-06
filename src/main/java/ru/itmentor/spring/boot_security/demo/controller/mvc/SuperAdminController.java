@@ -1,13 +1,13 @@
-package ru.itmentor.spring.boot_security.demo.controller;
+package ru.itmentor.spring.boot_security.demo.controller.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.RoleService;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
+import ru.itmentor.spring.boot_security.demo.util.DtoUtils;
 
 import java.io.File;
 import java.sql.Date;
@@ -16,26 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD_PLACE_HOLDER;
-import static ru.itmentor.spring.boot_security.demo.constants.Constants.USER_PASSWORD_DEFAULT;
-
 
 @Controller
 @RequestMapping(value = "/authenticated/superadmin")
 public class SuperAdminController extends AbstractController {
 
-    private UserUtilService userUtilService;
     private RoleService roleService;
 
 
-
     @Autowired
-    public SuperAdminController(UserService service, UserUtilService userUtilService, RoleService roleService) {
-        super(service); //  прокидываю UserService в общий суперкласс
-        this.userUtilService = userUtilService;
+    public SuperAdminController(UserService service,
+                                DtoUtils dtoUtils,
+                                RoleService roleService) {
+        super(service, dtoUtils); //  прокидываю UserService в общий суперкласс
         this.roleService = roleService;
     }
-
 
 
 

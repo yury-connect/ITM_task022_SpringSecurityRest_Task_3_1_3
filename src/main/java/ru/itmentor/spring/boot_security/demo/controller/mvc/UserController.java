@@ -1,4 +1,4 @@
-package ru.itmentor.spring.boot_security.demo.controller;
+package ru.itmentor.spring.boot_security.demo.controller.mvc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
+import ru.itmentor.spring.boot_security.demo.util.DtoUtils;
 
 import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD_PLACE_HOLDER;
 
@@ -15,9 +16,10 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD
 @RequestMapping(value = "/authenticated/user")
 public class UserController extends AbstractController {
 
+
     @Autowired
-    protected UserController(UserService userService) {
-        super(userService);
+    protected UserController(UserService userService, DtoUtils dtoUtils) {
+        super(userService, dtoUtils);
     }
 
 

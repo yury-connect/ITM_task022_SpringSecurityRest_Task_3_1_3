@@ -3,6 +3,7 @@ package ru.itmentor.spring.boot_security.demo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.util.Set;
 
@@ -20,10 +21,12 @@ public class User {
     @Column(name = "user_id", updatable = false, nullable = false) // поле не может быть обновлено при выполнении операции обновления (UPDATE) в БД...
     private int id;
 
-    @Column(name = "user_name")
+    @NotNull
+    @Column(name = "user_name", unique = true, nullable = false)
     private String userName;
 
-    @Column(name = "user_password")
+    @NotNull
+    @Column(name = "user_password", nullable = false)
     private String password;
 
     @Column(name = "user_email")

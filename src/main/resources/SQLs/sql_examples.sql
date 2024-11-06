@@ -3,7 +3,7 @@ SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'; 
 
 
 DROP TABLE IF EXISTS users;
-DROP DATABASE IF EXISTS itm_task021_spring_security_task_3_1_2_db;    -- Удаляю базу если она существует;
+DROP DATABASE IF EXISTS itm_task022_spring_security_task_3_1_3_db;    -- Удаляю базу если она существует;
 
 CREATE DATABASE itm_task021_spring_security_task_3_1_2_db;            -- Создаю базу если она еще не существует;
 

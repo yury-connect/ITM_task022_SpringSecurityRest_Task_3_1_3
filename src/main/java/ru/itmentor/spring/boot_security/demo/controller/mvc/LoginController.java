@@ -1,4 +1,4 @@
-package ru.itmentor.spring.boot_security.demo.controller;
+package ru.itmentor.spring.boot_security.demo.controller.mvc;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +9,7 @@ import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.RoleService;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
+import ru.itmentor.spring.boot_security.demo.util.DtoUtils;
 
 import java.util.*;
 
@@ -21,8 +22,11 @@ public class LoginController extends AbstractController {
     private UserUtilService userUtilService;
     private RoleService roleService;
 
-    public LoginController(UserService service, UserUtilService userUtilService, RoleService roleService) {
-        super(service); //  прокидываю UserService в общий суперкласс
+    public LoginController(UserService service,
+                           DtoUtils dtoUtils,
+                           UserUtilService userUtilService,
+                           RoleService roleService) {
+        super(service, dtoUtils); //  прокидываю UserService в общий суперкласс
         this.userUtilService = userUtilService;
         this.roleService = roleService;
     }

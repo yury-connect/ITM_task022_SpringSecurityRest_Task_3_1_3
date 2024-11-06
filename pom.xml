@@ -95,6 +95,22 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
+
+<!--Добавляю Swagger (Springfox или Springdoc), чтобы упростить взаимодействие с API и обеспечить его понятную документацию.-->
+<!--		После добавления зависимости, Swagger UI будет доступен по адресу http://localhost:8080/swagger-ui.html (по умолчанию).-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.5.13</version>
+		</dependency>
+
+<!--		Авторизация по токену-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
