@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.service.RoleService;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
+import ru.itmentor.spring.boot_security.demo.util.DtoUtils;
 
 import java.io.File;
 import java.sql.Date;
@@ -20,18 +21,16 @@ import java.util.Properties;
 @RequestMapping(value = "/authenticated/superadmin")
 public class SuperAdminController extends AbstractController {
 
-    private UserUtilService userUtilService;
     private RoleService roleService;
 
 
-
     @Autowired
-    public SuperAdminController(UserService service, UserUtilService userUtilService, RoleService roleService) {
-        super(service); //  прокидываю UserService в общий суперкласс
-        this.userUtilService = userUtilService;
+    public SuperAdminController(UserService service,
+                                DtoUtils dtoUtils,
+                                RoleService roleService) {
+        super(service, dtoUtils); //  прокидываю UserService в общий суперкласс
         this.roleService = roleService;
     }
-
 
 
 

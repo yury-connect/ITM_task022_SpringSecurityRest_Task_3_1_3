@@ -6,6 +6,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.itmentor.spring.boot_security.demo.controller.mvc.AbstractController;
+import ru.itmentor.spring.boot_security.demo.service.UserService;
+import ru.itmentor.spring.boot_security.demo.util.DtoUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -18,7 +21,13 @@ import java.util.Properties;
 @RestController
 @RequestMapping(value = "/api/authenticated/superadmin")
 @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-public class RestSuperAdminController {
+public class RestSuperAdminController extends AbstractController {
+
+
+    protected RestSuperAdminController(UserService userService, DtoUtils dtoUtils) {
+        super(userService, dtoUtils);
+    }
+
 
 
     // Добавим функционала, выведем какую-то информацию о системе... :)

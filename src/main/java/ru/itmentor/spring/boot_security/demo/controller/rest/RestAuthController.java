@@ -21,15 +21,13 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping("/api/auth")
 public class RestAuthController extends AbstractController {
 
-    private final DtoUtils dtoUtils;
-    private RoleService roleService;
+    private final RoleService roleService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
@@ -40,11 +38,10 @@ public class RestAuthController extends AbstractController {
                               AuthenticationManager authenticationManager,
                               JwtUtil jwtUtil, DtoUtils dtoUtils,
                               PasswordEncoder passwordEncoder) {
-        super(service); //  прокидываю UserService в общий суперкласс
+        super(service, dtoUtils); //  прокидываю UserService в общий суперкласс
         this.roleService = roleService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.dtoUtils = dtoUtils;
         this.passwordEncoder = passwordEncoder;
     }
 

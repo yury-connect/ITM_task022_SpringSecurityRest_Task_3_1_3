@@ -22,14 +22,10 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD
 @RequestMapping(value = "/api/authenticated/admin")
 public class RestAdminController extends AbstractController {
 
-    private DtoUtils dtoUtils;
-
 
     @Autowired
-    public RestAdminController(UserService service,
-                               DtoUtils dtoUtils) {
-        super(service); //  прокидываю UserService в общий суперкласс
-        this.dtoUtils = dtoUtils;
+    public RestAdminController(UserService service, DtoUtils dtoUtils) {
+        super(service, dtoUtils); //  прокидываю UserService в общий суперкласс
     }
 
 

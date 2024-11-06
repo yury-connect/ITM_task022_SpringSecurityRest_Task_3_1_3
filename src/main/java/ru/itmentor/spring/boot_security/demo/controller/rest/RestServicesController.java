@@ -1,7 +1,6 @@
 package ru.itmentor.spring.boot_security.demo.controller.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.controller.mvc.AbstractController;
@@ -11,8 +10,6 @@ import ru.itmentor.spring.boot_security.demo.service.UserService;
 import ru.itmentor.spring.boot_security.demo.service.UserUtilService;
 import ru.itmentor.spring.boot_security.demo.util.DtoUtils;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD_PLACE_HOLDER;
@@ -23,14 +20,13 @@ import static ru.itmentor.spring.boot_security.demo.constants.Constants.PASSWORD
 public class RestServicesController extends AbstractController {
 
     private UserUtilService userUtilService;
-    private DtoUtils dtoUtils;
+
 
     protected RestServicesController(UserService userService,
                                      UserUtilService userUtilService,
                                      DtoUtils dtoUtils) {
-        super(userService);
+        super(userService, dtoUtils);
         this.userUtilService = userUtilService;
-        this.dtoUtils = dtoUtils;
     }
 
 
