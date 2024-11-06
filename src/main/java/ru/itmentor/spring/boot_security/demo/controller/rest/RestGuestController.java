@@ -1,5 +1,6 @@
 package ru.itmentor.spring.boot_security.demo.controller.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,8 @@ public class RestGuestController extends AbstractController {
 
 
 
+    // Информирование гостей об успешном залогинивании (GET)
+    @Operation(summary = "Информирование гостей об успешном залогинивании (GET)")
     @GetMapping("/guests")
     public ResponseEntity<String> showGuestInfo() {
         String message = "Пользователь: '"

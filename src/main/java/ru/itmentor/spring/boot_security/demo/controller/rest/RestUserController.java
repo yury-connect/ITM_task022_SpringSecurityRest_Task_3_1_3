@@ -1,5 +1,6 @@
 package ru.itmentor.spring.boot_security.demo.controller.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -33,6 +34,8 @@ public class RestUserController extends AbstractController {
 
 
 
+    // Получение информации о себе-же /залогиненном пользователе (GET)
+    @Operation(summary = "Получение информации о себе-же /залогиненном пользователе (GET)")
     @GetMapping("/users")
     public ResponseEntity<UserDTO> showUserInfo(Model model) {
         User currentUser = getCurrentUser();

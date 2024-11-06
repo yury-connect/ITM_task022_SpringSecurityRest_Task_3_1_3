@@ -37,7 +37,7 @@
 
 ## Документирую код выполненного задания по **PP 3.1.3**.
 
-> #### Для контроллера `RestAdminController` применены следующие **CRUD** операции:
+> ### Для контроллера `RestAdminController` применены следующие **CRUD** операции:
 > 
 > **POST** `/users` — создание нового пользователя;
 > 
@@ -50,7 +50,7 @@
 > **DELETE** `/users/{id}` — удаление пользователя;
 > 
 
-> #### Для контроллера `RestAdminController` использованы следующие статусы ответов для успешных операций:
+> ### Для контроллера `RestAdminController` использованы следующие статусы ответов для успешных операций:
 > 
 > `POST` — для создания ресурса с `201 Created`;
 > 
@@ -61,46 +61,51 @@
 > `DELETE` — для удаления ресурса с `204 No Content`;
 >
 
-> #### Основные маршруты проекта:
-> Залогинивание:
+> ### Основные маршруты проекта:
+> #### Залогинивание:
 > > **POST** `/api/auth/register` - Регистрация нового пользователя (POST)
+> >
 > > **POST** `/api/auth/logout` - Разлогинивание текущего пользователя (POST)
+> >
 > > **POST** `/api/auth/login` - Получение токена/ залогинивание/ аутентификация (POST)
-> >
-> >
-> > 
-> >
-> >
-> > 
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> > 
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
-> >
 > 
+> #### Admin:
+> > **GET** `/api/authenticated/admin/users/{id}` Получение конкретного пользователя по ID (GET)
+> > 
+> > **PUT** `/api/authenticated/admin/users/{id}` Обновление данных пользователя (PUT)
+> > 
+> > **DELETE** `/api/authenticated/admin/users/{id}` Удаление пользователя (DELETE)
+> >
+> > **GET** `/api/authenticated/admin/users` Получение всех пользователей (GET)
+> >
+> > **POST** `/api/authenticated/admin/users` Создание одного нового пользователя (POST)
+> >
+> > **POST** `/api/authenticated/admin/users/batch` Создание списка новых пользователей (POST)
+> >
+> > **DELETE** `/api/authenticated/admin/users` Удаление всех пользователей (DELETE)
+> > 
 > 
+> #### SuperAdmin (все те-же действия, что и Admin, но дополняет своими):
+> > **GET** `/api/authenticated/superadmin/system_info` Получение информации о системе, на которой запущено приложение (GET)
+> >
 >
+> #### User:
+> > GET /api/authenticated/user/users Получение информации о себе-же /залогиненном пользователе (GET)
+> > 
+> 
+> #### Guest:
+> > **GET** `/api/authenticated/guest/guests` Информирование гостей об успешном залогинивании (GET)
+> >
+> > #### Скрин ниже:
+> ![скрин](/imgs/FireShot_Capture_Swagger_UI_localhost.png)
+> 
+> >  Полный список маршрутов можно получить через модуль SWAGER, перейдя по [ссылке](http://localhost:8088/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config) при запущеном проекте.
+> >
+> >  _http://localhost:8088/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config_
+> 
 
 
-#### Иерархия файлов проекта:
+### Иерархия файлов проекта:
 ```text
 ITM_task022_SpringSecurityRest_Task_3_1_3
 src
