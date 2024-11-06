@@ -97,7 +97,7 @@
 > > **GET** `/api/authenticated/guest/guests` Информирование гостей об успешном залогинивании (GET)
 > >
 > > #### Скрин ниже:
-> ![скрин](/imgs/FireShot_Capture_Swagger_UI_localhost.png)
+![скрин](/imgs/FireShot_Capture_Swagger_UI_localhost.png)
 > 
 > >  Полный список маршрутов можно получить через модуль SWAGER, перейдя по [ссылке](http://localhost:8088/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config) при запущеном проекте.
 > >
