@@ -21,9 +21,11 @@ public class User {
     @Column(name = "user_id", updatable = false, nullable = false) // поле не может быть обновлено при выполнении операции обновления (UPDATE) в БД...
     private int id;
 
+    @NotNull
     @Column(name = "user_name", unique = true, nullable = false)
     private String userName;
 
+    @NotNull
     @Column(name = "user_password", nullable = false)
     private String password;
 

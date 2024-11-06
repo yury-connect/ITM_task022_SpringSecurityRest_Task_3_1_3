@@ -18,10 +18,10 @@ public class UserDTO {
 
     private int id;
 
-//    @NotNull
+    @NotNull
     private String userName;
 
-//    @NotNull
+    @NotNull
     private String password;
 
     private String email;
